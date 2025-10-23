@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BookStore.Data.Entity
+{
+    [Table(nameof(Order))]
+    public partial class Order
+    {
+        public Order()
+        {
+            OrderDetails = [];
+        }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public int Id { get; set; }
+
+        public int UserId { get; set; }
+        [ForeignKey(nameof(UserId))]
+        [InverseProperty(nameof(User.Orders))]
+        public required virtual User User { get; set; }
+
+        public int Quantity => OrderDetails.Sum(x => x.Quantity);
+        public decimal TotalPrice => OrderDetails.Sum(x => x.TotalPrice);
+
+        [InverseProperty(nameof(OrderDetail.Order))]
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+    }
+}
