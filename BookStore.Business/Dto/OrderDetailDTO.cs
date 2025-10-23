@@ -19,4 +19,10 @@ namespace BookStore.Business.Dto
         public string? bookName { get; set; }
         public string? bookImage { get; set; }
     }
+
+    public class CreateOrderDetailDTO
+    {
+        public int? bookId { get; set; }
+        public int? quantity { get; set; }
+    }
 }

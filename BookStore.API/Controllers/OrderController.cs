@@ -1,0 +1,43 @@
+﻿using BookStore.API.Extension;
+using BookStore.Business.Dto;
+using BookStore.Business.Service.Implement;
+using BookStore.Business.Service.Interface;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BookStore.API.Controllers
+{
+    [ApiController]
+    [Route("api/v1/order")]
+    [EnableCors("MyAllowSpecificOrigins")]
+    public class OrderController : ControllerBase
+    {
+        private readonly IOrderService _orderService;
+        private readonly IUserService _userService;
+
+        public OrderController(IOrderService orderService, 
+            IUserService userService)
+        {
+            _orderService = orderService;
+            _userService = userService;
+        }
+
+        [HttpPost()]
+        [Authorize]
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDetailDTO[] createOrderDetailDTOs)
+        {
+            ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _orderService.CreateOrderAsync(createOrderDetailDTOs, currentUser);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetVoucherById(int id)
+        {
+            var result = await _orderService.GetOrderById(id);
+            return Ok(result);
+        }
+    }
+}

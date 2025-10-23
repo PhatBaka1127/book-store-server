@@ -38,6 +38,7 @@ namespace BookStore.API.Extension
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IOrderService, OrderService>();
         }
 
         public static void AddSwaggerServices(this IServiceCollection services, IConfiguration configuration)

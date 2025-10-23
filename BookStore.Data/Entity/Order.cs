@@ -24,7 +24,7 @@ namespace BookStore.Data.Entity
         public int BuyerId { get; set; }
         [ForeignKey(nameof(BuyerId))]
         [InverseProperty(nameof(User.Orders))]
-        public required virtual User Buyer { get; set; }
+        public virtual User Buyer { get; set; }
 
         public int Quantity => OrderDetails.Sum(x => x.Quantity);
         public decimal TotalPrice => OrderDetails.Sum(x => x.TotalPrice);
