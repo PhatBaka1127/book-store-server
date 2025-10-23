@@ -11,5 +11,7 @@ namespace BookStore.Business.Service.Implement
     public interface IBookService
     {
         public Task<ResponseMessage<int>> CreateBookAsync(CreateBookDTO createBookDTO, ThisUserObj thisUserObj);
+        public Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(PagingRequest pagingRequest, BookFilter bookFilter);
+        public Task<ResponseMessage<GetBookDTO>> GetBookByIdAsync(int id);
     }
 }

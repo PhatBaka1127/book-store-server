@@ -22,7 +22,6 @@ namespace BookStore.Business.Dto
         public string? sellerName { get; set; }
         public int? categoryId { get; set; }
         public string? categoryName { get; set; }
-        public ICollection<GetOrderDetailDTO>? OrderDetails { get; set; }
     }
 
     public class CreateBookDTO
@@ -34,5 +33,10 @@ namespace BookStore.Business.Dto
         public int? status { get; set; }
         public string? image { get; set; }
         public int? categoryId { get; set; }
+    }
+
+    public class BookFilter
+    {
+        public string? name { get; set; }
     }
 }

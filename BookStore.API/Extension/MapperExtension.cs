@@ -14,6 +14,9 @@ namespace BookStore.API.Extension
             // BOOK
             CreateMap<Book, GetBookDTO>().ReverseMap();
             CreateMap<Book, CreateBookDTO>().ReverseMap();
+
+            // ORDER DETAIL
+            CreateMap<OrderDetail, GetOrderDetailDTO>().ReverseMap();   
         }
     }
 }
