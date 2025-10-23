@@ -24,4 +24,15 @@ namespace BookStore.Business.Dto
         public string? categoryName { get; set; }
         public ICollection<GetOrderDetailDTO>? OrderDetails { get; set; }
     }
+
+    public class CreateBookDTO
+    {
+        public string? name { get; set; }
+        public string? description { get; set; }
+        public decimal? unitPrice { get; set; }
+        public int? stock { get; set; }
+        public int? status { get; set; }
+        public string? image { get; set; }
+        public int? categoryId { get; set; }
+    }
 }

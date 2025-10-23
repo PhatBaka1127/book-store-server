@@ -1,21 +1,43 @@
-﻿using BookStore.Business.Service.Implement;
+﻿using BookStore.Business.Dto;
+using BookStore.Business.Service.Implement;
 using BookStore.Business.Service.Interface;
 using BookStore.Data.Helper;
 using BookStore.Data.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 namespace BookStore.API.Extension
 {
     public static class ServiceExtension
     {
+        public static async Task<ThisUserObj> GetThisUserInfo(HttpContext httpContext, IUserService _userService)
+        {
+            ThisUserObj currentUser = new();
+
+            var checkUser = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber);
+            currentUser.userId = int.Parse(httpContext.User.Claims.First(c => c.Type == ClaimTypes.SerialNumber).Value);
+            currentUser.email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            currentUser.role = int.Parse(httpContext.User.Claims.First(c => c.Type == ClaimTypes.Role).Value);
+
+            var existedUser = await _userService.GetUserByEmailAsync(currentUser.email);
+            if (existedUser == null)
+            {
+                throw new NotFoundException("Không tìm thấy user này");
+            }
+
+            return currentUser;
+        }
+
         public static void AddDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped(typeof(BookStoreContext));
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IBookService, BookService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public static void AddSwaggerServices(this IServiceCollection services, IConfiguration configuration)

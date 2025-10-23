@@ -9,12 +9,29 @@ using System.Threading.Tasks;
 
 namespace BookStore.Business.Dto
 {
-    public class RequestAuthDTO
+    public class ThisUserObj
+    {
+        public int userId { get; set; }
+        public string? email { get; set; }
+        public int? role { get; set; }
+    }
+
+    public class LoginRequestDTO
     {
         [Required(ErrorMessage = "Email không được bỏ trống")]
         public string? email { get; set; }
         [Required(ErrorMessage = "Password không được bỏ trống")]
         public string? password { get; set; }
+    }
+
+    public class RegisterRequestDTO
+    {
+        [Required(ErrorMessage = "Email không được bỏ trống")]
+        public string? email { get; set; }
+        [Required(ErrorMessage = "Password không được bỏ trống")]
+        public string? password { get; set; }
+        [Required(ErrorMessage = "Role không được bỏ trống")]
+        public int role { get; set; }
     }
 
     public class ResponseAuthDTO

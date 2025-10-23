@@ -14,7 +14,7 @@ namespace BookStore.Data.Repository
         Task<TEntity?> AddAsync(TEntity entity);
         Task<bool> UpdateAsync(TEntity entity);
         Task<bool> DeleteAsync(TEntity entity);
-        Task<TEntity?> FindAsync(Guid id, bool isTracking = false);
+        Task<TEntity?> FindAsync(object id, bool isTracking = false);
         Task<TEntity?> GetByIdAsync(object id,
                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeProperties = null,
                                         bool isTracking = false);

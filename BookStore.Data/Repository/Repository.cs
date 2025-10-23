@@ -65,12 +65,12 @@ namespace BookStore.Data.Repository
             }
         }
 
-        public async Task<TEntity?> FindAsync(Guid id, bool isTracking = false)
+        public async Task<TEntity?> FindAsync(object id, bool isTracking = false)
         {
             try
             {
                 var query = isTracking ? _table : _table.AsNoTracking();
-                return await query.FirstOrDefaultAsync(e => EF.Property<Guid>(e, "Id") == id);
+                return await query.FirstOrDefaultAsync(e => EF.Property<object>(e, "Id") == id);
             }
             catch (Exception ex)
             {

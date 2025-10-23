@@ -10,6 +10,10 @@ namespace BookStore.API.Extension
         {
             // USER
             CreateMap<User, GetUserDTO>().ReverseMap();
+
+            // BOOK
+            CreateMap<Book, GetBookDTO>().ReverseMap();
+            CreateMap<Book, CreateBookDTO>().ReverseMap();
         }
     }
 }

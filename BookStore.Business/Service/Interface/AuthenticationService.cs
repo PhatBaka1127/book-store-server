@@ -4,6 +4,7 @@ using BookStore.Business.Service.Implement;
 using BookStore.Data.Entity;
 using BookStore.Data.Helper;
 using BookStore.Data.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -32,7 +33,7 @@ namespace BookStore.Business.Service.Interface
             _mapper = mapper;
         }
 
-        public async Task<ResponseAuthDTO> Login(RequestAuthDTO requestAuthDTO)
+        public async Task<ResponseAuthDTO> Login(LoginRequestDTO requestAuthDTO)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(
                 x => x.Email.ToLower() == requestAuthDTO.email.ToLower()
@@ -64,7 +65,7 @@ namespace BookStore.Business.Service.Interface
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.SerialNumber, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role.ToString())
             };
@@ -85,7 +86,7 @@ namespace BookStore.Business.Service.Interface
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<ResponseAuthDTO> Register(RequestAuthDTO requestAuthDTO)
+        public async Task<ResponseAuthDTO> Register(RegisterRequestDTO requestAuthDTO)
         {
             var existingUser = await _userRepository
                 .GetFirstOrDefaultAsync(u => u.Email.ToLower() == requestAuthDTO.email.ToLower());
@@ -99,6 +100,7 @@ namespace BookStore.Business.Service.Interface
             {
                 Email = requestAuthDTO.email,
                 HashPassword = hashedPassword,
+                Role = requestAuthDTO.role
             };
 
             await _userRepository.AddAsync(newUser);

@@ -20,17 +20,17 @@ namespace BookStore.API.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] RequestAuthDTO requestAuthDTO)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
-            var result = await _authService.Login(requestAuthDTO);
+            var result = await _authService.Login(loginRequestDTO);
             return Ok(result);
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RequestAuthDTO requestAuthDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequestDTO)
         {
-            var result = await _authService.Register(requestAuthDTO);
+            var result = await _authService.Register(registerRequestDTO);
             return Ok(result);
         }
     }
