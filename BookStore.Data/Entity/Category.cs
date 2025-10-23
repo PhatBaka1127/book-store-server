@@ -22,6 +22,7 @@ namespace BookStore.Data.Entity
 
         public required string Name { get; set; }
         public int Status { get; set; } = 1;
+        public string? Image { get; set; }
 
         [InverseProperty(nameof(Book.Category))]
         public virtual ICollection<Book> Books { get; set; }

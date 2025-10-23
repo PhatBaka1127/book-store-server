@@ -25,6 +25,6 @@ namespace BookStore.Data.Repository
                                                     Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includeProperties = null,
                                                     bool isTracking = false);
         IQueryable<TEntity> GetTable();
-        Task<bool> SaveChanges();
+        Task<bool> SaveChangesAsync();
     }
 }

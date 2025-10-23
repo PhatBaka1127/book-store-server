@@ -26,7 +26,7 @@ namespace BookStore.Data.Repository
             try
             {
                 await _table.AddAsync(entity);
-                var result = await SaveChanges();
+                var result = await SaveChangesAsync();
                 return result ? entity : null;
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace BookStore.Data.Repository
             try
             {
                 _context.Update(entity);
-                return await SaveChanges();
+                return await SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -55,7 +55,7 @@ namespace BookStore.Data.Repository
             try
             {
                 _table.Remove(entity);
-                await SaveChanges();
+                await SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
@@ -144,7 +144,7 @@ namespace BookStore.Data.Repository
             return _table;
         }
 
-        public async Task<bool> SaveChanges()
+        public async Task<bool> SaveChangesAsync()
         {
             try
             {

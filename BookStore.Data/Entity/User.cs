@@ -23,15 +23,16 @@ namespace BookStore.Data.Entity
 
         public required string Email { get; set; }
         public string? HashPassword { get; set; }
+        public string? Image { get; set; }
         // 0: Buyer
         // 1: Seller
         public int Role { get; set; } = 0;
         public int Status { get; set; } = 1;
 
-        [InverseProperty(nameof(Order.User))]
+        [InverseProperty(nameof(Order.Buyer))]
         public virtual ICollection<Order> Orders { get; set; }
 
-        [InverseProperty(nameof(Book.User))]
+        [InverseProperty(nameof(Book.Seller))]
         public virtual ICollection<Book> Books { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace BookStore.Data.Entity
         public int SellerId { get; set; }
         [ForeignKey(nameof(SellerId))]
         [InverseProperty(nameof(User.Books))]
-        public required virtual User User { get; set; }
+        public required virtual User Seller { get; set; }
 
         public int CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]

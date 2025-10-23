@@ -12,16 +12,16 @@ namespace BookStore.Data.Entity
     public partial class OrderDetail
     {
         [Key]
-        public int OrderId { get; set; }
+        public int? OrderId { get; set; }
         [ForeignKey(nameof(OrderId))]
         [InverseProperty(nameof(Order.OrderDetails))]
-        public required virtual Order Order { get; set; }
+        public virtual Order? Order { get; set; }
 
         [Key]
-        public int BookId { get; set; }
+        public int? BookId { get; set; }
         [ForeignKey(nameof(BookId))]
         [InverseProperty(nameof(Book.OrderDetails))]
-        public required virtual Book Book { get; set; }
+        public virtual Book? Book { get; set; }
 
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }

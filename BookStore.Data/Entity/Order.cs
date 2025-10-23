@@ -19,11 +19,12 @@ namespace BookStore.Data.Entity
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        public int UserId { get; set; }
-        [ForeignKey(nameof(UserId))]
+        public int BuyerId { get; set; }
+        [ForeignKey(nameof(BuyerId))]
         [InverseProperty(nameof(User.Orders))]
-        public required virtual User User { get; set; }
+        public required virtual User Buyer { get; set; }
 
         public int Quantity => OrderDetails.Sum(x => x.Quantity);
         public decimal TotalPrice => OrderDetails.Sum(x => x.TotalPrice);
