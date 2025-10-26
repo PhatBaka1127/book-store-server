@@ -1,0 +1,3 @@
+dotnet ef migrations add InitialCreate --project BookStore.Data --startup-project BookStore.API
+dotnet ef database update --project BookStore.Data --startup-project BookStore.API
+
