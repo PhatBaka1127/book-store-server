@@ -30,7 +30,7 @@ namespace BookStore.Data.Helper
                                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
                 IConfigurationRoot configuration = builder.Build();
                 optionsBuilder.EnableSensitiveDataLogging();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             }
         }
 
