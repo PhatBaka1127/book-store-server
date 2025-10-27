@@ -7,14 +7,15 @@
   <ItemGroup>
     <ProjectReference Include="..\BookStore.Data\BookStore.Data.csproj"/>
   </ItemGroup>
- <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.21" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0"/>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.21"/>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0"/>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.14.0"/>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0"/>
+    <PackageReference Include="CloudinaryDotNet" Version="1.27.8"/>
   </ItemGroup>
 </Project>

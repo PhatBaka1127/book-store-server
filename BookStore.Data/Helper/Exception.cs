@@ -20,10 +20,18 @@ namespace BookStore.Data.Helper
         }
     }
 
-    public class ConflictException : Exception 
+    public class ConflictException : Exception
     {
         public ConflictException(string message) : base(message)
         {
+        }
+    }
+    
+    public class FileException : Exception
+    {
+        public FileException(string message) : base(message)
+        {
+            
         }
     }
 }

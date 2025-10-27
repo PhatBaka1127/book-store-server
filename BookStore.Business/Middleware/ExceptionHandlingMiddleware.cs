@@ -54,6 +54,10 @@ namespace BookStore.Business.Middleware
                     errorMessageObject.code = "409";
                     statusCode = (int)HttpStatusCode.Conflict;
                     break;
+                case FileException:
+                    errorMessageObject.code = "400";
+                    statusCode = (int)HttpStatusCode.BadRequest;
+                    break;
             }
 
             var errorMessage = JsonConvert.SerializeObject(errorMessageObject);

@@ -9,12 +9,15 @@ builder.Services.AddDependencyInjection(builder.Configuration);
 builder.Services.AddSwaggerServices(configuration);
 builder.Services.AddJWTServices(configuration);
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection("CloudinarySettings")
+);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: "MyAllowSpecificOrigins",
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:3000")
+                          policy.WithOrigins("http://localhost:4200")
                                 .AllowAnyMethod()
                                 .AllowAnyHeader()
                                 .AllowCredentials();
