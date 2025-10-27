@@ -34,15 +34,17 @@ namespace BookStore.API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> GetVouchers([FromQuery] BookFilter bookFilter,
+        public async Task<IActionResult> GetBooks([FromQuery] BookFilter bookFilter,
                                                         [FromQuery] PagingRequest pagingRequest)
         {
-            var result = await _bookService.GetBooksAsync(pagingRequest, bookFilter);
+            ThisUserObj thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _bookService.GetBooksAsync(pagingRequest, bookFilter, thisUserObj);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetVoucherById(int id)
+        public async Task<IActionResult> GetBookById(int id)
         {
             var result = await _bookService.GetBookByIdAsync(id);
             return Ok(result);

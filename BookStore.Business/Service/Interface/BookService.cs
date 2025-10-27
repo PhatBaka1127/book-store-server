@@ -70,13 +70,16 @@ namespace BookStore.Business.Service.Interface
             };
         }
 
-        public async Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(PagingRequest pagingRequest, BookFilter bookFilter)
+        public async Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(PagingRequest pagingRequest, BookFilter bookFilter, ThisUserObj thisUserObj)
         {
             (int, IQueryable<GetBookDTO>) result;
 
             var query = _bookRepository.GetTable()
                             .ProjectTo<GetBookDTO>(_mapper.ConfigurationProvider)
                             .Where(x => bookFilter.name == null || x.name.Contains(bookFilter.name));
+
+            if (thisUserObj.role == 1) // SELLER
+                query = query.Where(x => x.sellerId == thisUserObj.userId);
 
             result = query.PagingIQueryable(pagingRequest.page, pagingRequest.pageSize, PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
 

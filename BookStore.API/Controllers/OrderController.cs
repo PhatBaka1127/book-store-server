@@ -23,7 +23,7 @@ namespace BookStore.API.Controllers
             _userService = userService;
         }
 
-        [HttpPost()]
+        [HttpPost]
         [Authorize]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDetailDTO[] createOrderDetailDTOs)
         {

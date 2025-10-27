@@ -47,7 +47,7 @@ namespace BookStore.Business.Service.Interface
                 newOrder.OrderDetails.Add(orderDetail);
             }
 
-            newOrder.CreatedDate = DateTime.Now;
+            newOrder.CreatedDate = DateTime.UtcNow;
             newOrder.BuyerId = thisUserObj.userId;
 
             await _orderRepository.AddAsync(newOrder);
