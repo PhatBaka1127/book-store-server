@@ -25,7 +25,7 @@ namespace BookStore.API.Controllers
 
         [HttpPost()]
         [Authorize]
-        public async Task<IActionResult> CreateBook([FromBody] CreateBookDTO voucherDTO)
+        public async Task<IActionResult> CreateBook([FromForm] CreateBookDTO voucherDTO)
         {
             ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 

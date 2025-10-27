@@ -1,4 +1,5 @@
 ﻿using BookStore.Data.Entity;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +32,7 @@ namespace BookStore.Business.Dto
         public decimal? unitPrice { get; set; }
         public int? stock { get; set; }
         public int? status { get; set; }
-        public string? image { get; set; }
+        public IFormFile? image { get; set; }
         public int? categoryId { get; set; }
     }
 

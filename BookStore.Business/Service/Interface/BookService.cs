@@ -17,14 +17,17 @@ namespace BookStore.Business.Service.Interface
 {
     public class BookService : IBookService
     {
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IRepository<Category> _categoryRepository;
         private readonly IRepository<Book> _bookRepository;
         private readonly IMapper _mapper;
 
-        public BookService(IRepository<Book> bookRepository, 
+        public BookService(IRepository<Book> bookRepository,
             IRepository<Category> categoryRepository,
+            ICloudinaryService cloudinaryService,
             IMapper mapper)
         {
+            _cloudinaryService = cloudinaryService;
             _categoryRepository = categoryRepository;
             _bookRepository = bookRepository;
             _mapper = mapper;
@@ -38,6 +41,9 @@ namespace BookStore.Business.Service.Interface
 
             Book newBook = _mapper.Map<Book>(createBookDTO);
             newBook.SellerId = thisUserObj.userId;
+
+            if (createBookDTO.image != null && createBookDTO.image.Length > 0)
+                newBook.Image = await _cloudinaryService.UploadImageAsync(createBookDTO.image);
 
             await _bookRepository.AddAsync(newBook);
             await _bookRepository.SaveChangesAsync();
