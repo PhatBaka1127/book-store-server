@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookStore.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/book")]
+    [Route("api/v1/books")]
     [EnableCors("MyAllowSpecificOrigins")]
     public class BookController : ControllerBase
     {

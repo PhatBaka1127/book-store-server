@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BookStore.API.Controllers
 {
     [ApiController]
-    [Route("api/v1/file")]
+    [Route("api/v1/files")]
     [EnableCors("MyAllowSpecificOrigins")]
     public class FileController : ControllerBase
     {
