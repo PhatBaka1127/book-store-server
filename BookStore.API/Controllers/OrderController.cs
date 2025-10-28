@@ -50,5 +50,15 @@ namespace BookStore.API.Controllers
             var result = await _orderService.GetOrders(currentUser, pagingRequest, orderFilter);
             return Ok(result);
         }
+
+        [HttpGet("report")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderReport([FromQuery] ReportFilter reportFilter)
+        {
+            ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _orderService.GetOrderReport(currentUser, reportFilter);
+            return Ok(result);
+        }
     }
 }

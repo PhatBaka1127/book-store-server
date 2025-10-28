@@ -1,10 +1,13 @@
+using BookStore.Business.Service.Interface;
 using BookStore.Data.Helper;
 using CloudinaryDotNet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
-public class CloudinaryService : ICloudinaryService
+namespace BookStore.Business.Service.Implement
 {
+    public class CloudinaryService : ICloudinaryService
+    {
         private readonly Cloudinary _cloudinary;
 
         public CloudinaryService(IOptions<CloudinarySettings> config)
@@ -20,7 +23,7 @@ public class CloudinaryService : ICloudinaryService
 
         public async Task<string> UploadImageAsync(IFormFile file)
         {
-  
+
             await using var stream = file.OpenReadStream();
             var uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams
             {
@@ -36,4 +39,5 @@ public class CloudinaryService : ICloudinaryService
 
             throw new FileException("Failed uploading file");
         }
+    }
 }

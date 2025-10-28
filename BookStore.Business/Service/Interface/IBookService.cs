@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Business.Service.Implement
+namespace BookStore.Business.Service.Interface
 {
     public interface IBookService
     {

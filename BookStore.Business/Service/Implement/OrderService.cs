@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BookStore.Business.Dto;
 using BookStore.Business.Helper;
 using BookStore.Business.Service.Implement;
+using BookStore.Business.Service.Interface;
 using BookStore.Data.Entity;
 using BookStore.Data.Helper;
 using BookStore.Data.Repository;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Business.Service.Interface
+namespace BookStore.Business.Service.Implement
 {
     public class OrderService : IOrderService
     {
@@ -76,6 +77,48 @@ namespace BookStore.Business.Service.Interface
                 result = true,
                 value = _mapper.Map<GetDetailOrderDTO>(existedOrder)
             };
+        }
+
+        public async Task<List<DailySummaryDTO>> GetOrderReport(ThisUserObj thisUserObj, ReportFilter reportFilter)
+        {
+            var query = _orderRepository.GetTable()
+                            .Where(o => o.OrderDetails.Any(od => od.Book.SellerId == thisUserObj.userId));
+
+            if (reportFilter.startDate.HasValue)
+                query = query.Where(o => o.CreatedDate >= reportFilter.startDate.Value);
+            if (reportFilter.endDate.HasValue)
+                query = query.Where(o => o.CreatedDate <= reportFilter.endDate.Value);
+
+            var groupedQuery = reportFilter.reportFilterEnum switch
+            {
+                ReportFilterEnum.MONTH => query.GroupBy(o => new { o.CreatedDate.Year, o.CreatedDate.Month })
+                                .Select(g => new DailySummaryDTO
+                                {
+                                    Date = DateTime.SpecifyKind(new DateTime(g.Key.Year, g.Key.Month, 1), DateTimeKind.Utc),
+                                    Orders = g.Count(),
+                                    Quantity = g.Sum(x => x.OrderDetails.Sum(x => x.Quantity)),
+                                    Revenue = g.Sum(o => o.TotalPrice)
+                                }),
+                ReportFilterEnum.YEAR => query.GroupBy(o => o.CreatedDate.Year)
+                               .Select(g => new DailySummaryDTO
+                               {
+                                   Date = new DateTime(g.Key, 1, 1),
+                                   Orders = g.Count(),
+                                   Quantity = g.Sum(x => x.OrderDetails.Sum(x => x.Quantity)),
+                                   Revenue = g.Sum(o => o.TotalPrice)
+                               }),
+                _ => query.GroupBy(o => o.CreatedDate.Date)
+                         .Select(g => new DailySummaryDTO
+                         {
+                             Date = g.Key,
+                             Orders = g.Count(),
+                             Revenue = g.Sum(o => o.TotalPrice),
+                             Quantity = g.Sum(x => x.OrderDetails.Sum(x => x.Quantity))
+                         })
+            };
+
+            var result = await groupedQuery.OrderBy(d => d.Date).ToListAsync();
+            return result;
         }
 
         public async Task<DynamicResponseModel<GetOrderDTO>> GetOrders(

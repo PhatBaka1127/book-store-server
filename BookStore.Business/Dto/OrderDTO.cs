@@ -48,4 +48,33 @@ namespace BookStore.Business.Dto
         DELIVERED = 2,
         FAILED = 3
     }
+
+    public class ReportFilter
+    {
+        public DateTime? startDate { get; set; }
+        public DateTime? endDate { get; set; }
+        public ReportFilterEnum reportFilterEnum { get; set; }
+    }
+    
+    public class DashboardSummaryDTO
+    {
+        public int TotalOrders { get; set; }
+        public decimal TotalRevenue { get; set; }
+        public List<DailySummaryDTO> DailySummaries { get; set; } = new();
+    }
+
+    public class DailySummaryDTO
+    {
+        public DateTime Date { get; set; }
+        public int Orders { get; set; }
+        public int Quantity { get; set; }
+        public decimal Revenue { get; set; }
+    }
+
+    public enum ReportFilterEnum
+    {
+        DAY = 0,
+        MONTH = 1,
+        YEAR = 2
+    }
 }

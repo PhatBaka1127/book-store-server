@@ -1,5 +1,6 @@
 ﻿using BookStore.Business.Dto;
 using BookStore.Business.Service.Implement;
+using BookStore.Business.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;

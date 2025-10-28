@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using BookStore.Business.Dto;
 using BookStore.Business.Helper;
 using BookStore.Business.Service.Implement;
+using BookStore.Business.Service.Interface;
 using BookStore.Data.Entity;
 using BookStore.Data.Helper;
 using BookStore.Data.Repository;
@@ -13,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BookStore.Business.Service.Interface
+namespace BookStore.Business.Service.Implement
 {
     public class BookService : IBookService
     {
