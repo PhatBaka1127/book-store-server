@@ -25,11 +25,11 @@ namespace BookStore.API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDetailDTO[] createOrderDetailDTOs)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
         {
             ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 
-            var result = await _orderService.CreateOrderAsync(createOrderDetailDTOs, currentUser);
+            var result = await _orderService.CreateOrderAsync(createOrderDTO, currentUser);
             return Ok(result);
         }
 

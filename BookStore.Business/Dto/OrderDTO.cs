@@ -19,4 +19,11 @@ namespace BookStore.Business.Dto
         public decimal? totalPrice { get; set; }
         public ICollection<GetOrderDetailDTO>? orderDetails { get; set; }
     }
+
+    public class CreateOrderDTO
+    {
+        public string phoneNumber { get; set; }
+        public string address { get; set; }
+        public CreateOrderDetailDTO[] createOrderDetailDTOs { get; set; }
+    }
 }

@@ -29,11 +29,11 @@ namespace BookStore.Business.Service.Interface
             _mapper = mapper;
         }
 
-        public async Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderDetailDTO[] createOrderDetailDTOs, ThisUserObj thisUserObj)
+        public async Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderDTO createOrderDTO, ThisUserObj thisUserObj)
         {
-            Order newOrder = new Order();
-
-            foreach (var createOrderDetailDTO in createOrderDetailDTOs)
+            Order newOrder = _mapper.Map<Order>(createOrderDTO);
+            
+            foreach (var createOrderDetailDTO in createOrderDTO.createOrderDetailDTOs)
             {
                 var existedBook = await _bookRepository.FindAsync(createOrderDetailDTO.bookId);
                 if (existedBook == null)
