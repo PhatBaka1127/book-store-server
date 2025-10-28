@@ -85,9 +85,9 @@ namespace BookStore.Business.Service.Implement
                             .Where(o => o.OrderDetails.Any(od => od.Book.SellerId == thisUserObj.userId));
 
             if (reportFilter.startDate.HasValue)
-                query = query.Where(o => o.CreatedDate >= reportFilter.startDate.Value);
+                query = query.Where(o => o.CreatedDate.ToUniversalTime() >= reportFilter.startDate.Value.ToUniversalTime());
             if (reportFilter.endDate.HasValue)
-                query = query.Where(o => o.CreatedDate <= reportFilter.endDate.Value);
+                query = query.Where(o => o.CreatedDate.ToUniversalTime() <= reportFilter.endDate.Value.ToUniversalTime());
 
             var groupedQuery = reportFilter.reportFilterEnum switch
             {
