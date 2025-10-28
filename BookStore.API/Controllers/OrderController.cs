@@ -1,5 +1,6 @@
 ﻿using BookStore.API.Extension;
 using BookStore.Business.Dto;
+using BookStore.Business.Helper;
 using BookStore.Business.Service.Implement;
 using BookStore.Business.Service.Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -34,9 +35,19 @@ namespace BookStore.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetVoucherById(int id)
+        public async Task<IActionResult> GetOrderById(int id)
         {
             var result = await _orderService.GetOrderById(id);
+            return Ok(result);
+        }
+
+        [HttpGet()]
+        [Authorize]
+        public async Task<IActionResult> GetOrders([FromQuery] OrderFilter orderFilter, [FromQuery] PagingRequest pagingRequest)
+        {
+            ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _orderService.GetOrders(currentUser, pagingRequest, orderFilter);
             return Ok(result);
         }
     }

@@ -70,28 +70,28 @@ namespace BookStore.Business.Service.Interface
             };
         }
 
-        public async Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(PagingRequest pagingRequest, BookFilter bookFilter, ThisUserObj thisUserObj)
+        public async Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(
+            PagingRequest paging, BookFilter filter, ThisUserObj user)
         {
-            (int, IQueryable<GetBookDTO>) result;
-
             var query = _bookRepository.GetTable()
-                            .ProjectTo<GetBookDTO>(_mapper.ConfigurationProvider)
-                            .Where(x => bookFilter.name == null || x.name.Contains(bookFilter.name));
+                .ProjectTo<GetBookDTO>(_mapper.ConfigurationProvider)
+                .Where(b => string.IsNullOrEmpty(filter.name) || b.name.Contains(filter.name));
 
-            if (thisUserObj.role == 1) // SELLER
-                query = query.Where(x => x.sellerId == thisUserObj.userId);
+            if (user.role == 1) // SELLER
+                query = query.Where(b => b.sellerId == user.userId);
 
-            result = query.PagingIQueryable(pagingRequest.page, pagingRequest.pageSize, PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
+            var (total, data) = query.PagingIQueryable(
+                paging.page, paging.pageSize, PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
 
-            return new DynamicResponseModel<GetBookDTO>()
+            return new DynamicResponseModel<GetBookDTO>
             {
-                metaData = new MetaData()
+                metaData = new MetaData
                 {
-                    page = pagingRequest.page,
-                    size = pagingRequest.pageSize,
-                    total = result.Item1
+                    page = paging.page,
+                    size = paging.pageSize,
+                    total = total
                 },
-                results = await result.Item2.ToListAsync()
+                results = await data.ToListAsync()
             };
         }
     }

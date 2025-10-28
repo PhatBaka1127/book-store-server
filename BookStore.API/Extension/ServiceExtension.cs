@@ -18,9 +18,9 @@ namespace BookStore.API.Extension
             ThisUserObj currentUser = new();
 
             var checkUser = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber);
-            currentUser.userId = int.Parse(httpContext.User.Claims.First(c => c.Type == ClaimTypes.SerialNumber).Value);
+            currentUser.userId = int.Parse(httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber).Value);
             currentUser.email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-            currentUser.role = int.Parse(httpContext.User.Claims.First(c => c.Type == ClaimTypes.Role).Value);
+            currentUser.role = int.Parse(httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value);
 
             var existedUser = await _userService.GetUserByEmailAsync(currentUser.email);
             if (existedUser == null)

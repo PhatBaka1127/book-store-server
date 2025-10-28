@@ -53,4 +53,10 @@ namespace BookStore.Business.Dto
         public ICollection<GetOrderDTO>? orders { get; set; }
         public ICollection<GetBookDTO>? books { get; set; }
     }
+
+    public enum RoleEnum
+    {
+        BUYER = 0,
+        SELLER = 1
+    }
 }

@@ -26,8 +26,8 @@ namespace BookStore.Data.Entity
         [InverseProperty(nameof(User.Orders))]
         public virtual User Buyer { get; set; }
 
-        public int Quantity => OrderDetails.Sum(x => x.Quantity);
-        public decimal TotalPrice => OrderDetails.Sum(x => x.TotalPrice);
+        public int Quantity { get; set; }
+        public decimal TotalPrice { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
 

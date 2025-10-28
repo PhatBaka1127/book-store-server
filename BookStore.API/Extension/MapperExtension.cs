@@ -20,6 +20,7 @@ namespace BookStore.API.Extension
 
             // ORDER
             CreateMap<Order, GetOrderDTO>().ReverseMap();
+            CreateMap<Order, GetDetailOrderDTO>().ReverseMap();
             CreateMap<Order, CreateOrderDTO>().ReverseMap();
 
             // CATEGORY

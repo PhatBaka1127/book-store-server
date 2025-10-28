@@ -12,12 +12,14 @@ namespace BookStore.Business.Dto
     public class GetOrderDTO
     {
         public int? id { get; set; }
-        public int? userId { get; set; }
-        public string? userName { get; set; }
         public string? createdDate { get; set; }
         public int? quantity { get; set; }
         public decimal? totalPrice { get; set; }
-        public ICollection<GetOrderDetailDTO>? orderDetails { get; set; }
+    }
+
+    public class GetDetailOrderDTO : GetOrderDTO
+    {
+        public GetOrderDetailDTO[] orderDetails { get; set; }
     }
 
     public class CreateOrderDTO
@@ -25,5 +27,20 @@ namespace BookStore.Business.Dto
         public string phone { get; set; }
         public string address { get; set; }
         public CreateOrderDetailDTO[] createOrderDetailDTOs { get; set; }
+    }
+
+    public class OrderFilter
+    {
+        public DateTime? startTime { get; set; }
+        public DateTime? endTime { get; set; }
+        public OrderStatus status { get; set; }
+    }
+
+    public enum OrderStatus
+    {
+        ORDERED = 0,
+        DELIVERING = 1,
+        DELIVERED = 2,
+        FAILED = 3
     }
 }

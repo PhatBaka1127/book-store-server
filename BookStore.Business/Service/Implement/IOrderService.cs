@@ -11,6 +11,7 @@ namespace BookStore.Business.Service.Implement
     public interface IOrderService
     {
         public Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderDTO createOrderDTO, ThisUserObj thisUserObj);
-        public Task<ResponseMessage<GetOrderDTO>> GetOrderById(int id);
+        public Task<ResponseMessage<GetDetailOrderDTO>> GetOrderById(int id);
+        public Task<DynamicResponseModel<GetOrderDTO>> GetOrders(ThisUserObj thisUserObj, PagingRequest pagingRequest, OrderFilter orderFilter);
     }
 }
