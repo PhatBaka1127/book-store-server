@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using BookStore.Business.Dto;
 using BookStore.Data.Entity;
 

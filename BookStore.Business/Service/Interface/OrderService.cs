@@ -48,6 +48,7 @@ namespace BookStore.Business.Service.Interface
                 newOrder.OrderDetails.Add(orderDetail);
             }
 
+            newOrder.TotalPrice = newOrder.OrderDetails.Sum(x => x.TotalPrice);
             newOrder.CreatedDate = DateTime.UtcNow;
             newOrder.BuyerId = thisUserObj.userId;
 

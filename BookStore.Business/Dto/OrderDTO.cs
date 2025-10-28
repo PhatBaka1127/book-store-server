@@ -15,6 +15,9 @@ namespace BookStore.Business.Dto
         public string? createdDate { get; set; }
         public int? quantity { get; set; }
         public decimal? totalPrice { get; set; }
+        public OrderStatus status { get; set; }
+        public string? address { get; set; }
+        public string? phone { get; set; }
     }
 
     public class GetDetailOrderDTO : GetOrderDTO
@@ -26,6 +29,8 @@ namespace BookStore.Business.Dto
     {
         public string phone { get; set; }
         public string address { get; set; }
+        public int status = (int) OrderStatus.ORDERED;
+        public int quantity => (int) createOrderDetailDTOs.Sum(x => x.quantity);
         public CreateOrderDetailDTO[] createOrderDetailDTOs { get; set; }
     }
 

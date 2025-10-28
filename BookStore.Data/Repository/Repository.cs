@@ -21,13 +21,11 @@ namespace BookStore.Data.Repository
             _table = context.Set<TEntity>();
         }
 
-        public async Task<TEntity?> AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity)
         {
             try
             {
                 await _table.AddAsync(entity);
-                var result = await SaveChangesAsync();
-                return result ? entity : null;
             }
             catch (Exception ex)
             {

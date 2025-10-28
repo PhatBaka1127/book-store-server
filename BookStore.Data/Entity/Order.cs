@@ -30,6 +30,7 @@ namespace BookStore.Data.Entity
         public decimal TotalPrice { get; set; }
         public string Address { get; set; }
         public string Phone { get; set; }
+        public int Status { get; set; }
 
         [InverseProperty(nameof(OrderDetail.Order))]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
