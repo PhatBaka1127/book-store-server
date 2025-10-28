@@ -22,7 +22,7 @@ namespace BookStore.Business.Dto
 
     public class CreateOrderDTO
     {
-        public string phoneNumber { get; set; }
+        public string phone { get; set; }
         public string address { get; set; }
         public CreateOrderDetailDTO[] createOrderDetailDTOs { get; set; }
     }
