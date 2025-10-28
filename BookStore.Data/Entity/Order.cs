@@ -28,6 +28,8 @@ namespace BookStore.Data.Entity
 
         public int Quantity => OrderDetails.Sum(x => x.Quantity);
         public decimal TotalPrice => OrderDetails.Sum(x => x.TotalPrice);
+        public string Address { get; set; }
+        public string Phone { get; set; }
 
         [InverseProperty(nameof(OrderDetail.Order))]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
