@@ -10,7 +10,10 @@ namespace BookStore.Business.Service.Interface
 {
     public interface IOrderService
     {
+        // CREATE
         public Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderDTO createOrderDTO, ThisUserObj thisUserObj);
+        
+        // READ
         public Task<ResponseMessage<GetDetailOrderDTO>> GetOrderById(int id);
         public Task<DynamicResponseModel<GetOrderDTO>> GetOrders(ThisUserObj thisUserObj, PagingRequest pagingRequest, OrderFilter orderFilter);
         public Task<List<DailySummaryDTO>> GetOrderReport(ThisUserObj thisUserObj, ReportFilter reportFilter);

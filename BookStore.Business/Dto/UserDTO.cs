@@ -34,7 +34,7 @@ namespace BookStore.Business.Dto
         public int role { get; set; }
     }
 
-    public class ResponseAuthDTO
+    public class AuthDTO
     {
         public int id { get; set; }
         public string? email { get; set; }

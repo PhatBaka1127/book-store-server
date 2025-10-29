@@ -1,4 +1,5 @@
 ﻿using BookStore.Business.Dto;
+using BookStore.Business.Helper;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace BookStore.Business.Service.Interface
 {
     public interface IAuthenticationService
     {
-        public Task<ResponseAuthDTO> Login(LoginRequestDTO requestAuthDTO);
-        public Task<ResponseAuthDTO> Register(RegisterRequestDTO requestAuthDTO);
+        public Task<ResponseMessage<AuthDTO>> Login(LoginRequestDTO requestAuthDTO);
+        public Task<ResponseMessage<AuthDTO>> Register(RegisterRequestDTO requestAuthDTO);
     }
 }

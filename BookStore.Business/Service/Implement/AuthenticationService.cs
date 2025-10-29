@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BookStore.Business.Dto;
+using BookStore.Business.Helper;
 using BookStore.Business.Service.Implement;
 using BookStore.Business.Service.Interface;
 using BookStore.Data.Entity;
@@ -34,29 +35,34 @@ namespace BookStore.Business.Service.Implement
             _mapper = mapper;
         }
 
-        public async Task<ResponseAuthDTO> Login(LoginRequestDTO requestAuthDTO)
+        public async Task<ResponseMessage<AuthDTO>> Login(LoginRequestDTO requestAuthDTO)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(
                 x => x.Email.ToLower() == requestAuthDTO.email.ToLower()
             );
 
             if (user == null)
-                throw new NotFoundException("Email không tồn tại");
+                throw new NotFoundException("Email not found");
 
             bool validPassword = BCrypt.Net.BCrypt.Verify(requestAuthDTO.password, user.HashPassword);
 
             if (!validPassword)
-                throw new NotFoundException("Mật khẩu không đúng");
+                throw new NotFoundException("Wrong password");
 
             string token = GenerateJwtToken(user);
 
-            return new ResponseAuthDTO
+            return new ResponseMessage<AuthDTO>()
             {
-                accessToken = token,
-                email = user.Email,
-                id = user.Id,
-                role = user.Role,
-                status = user.Status,
+                message = "Login successfully",
+                result = true,
+                value = new AuthDTO()
+                {
+                    accessToken = token,
+                    email = user.Email,
+                    id = user.Id,
+                    role = user.Role,
+                    status = user.Status,
+                }
             };
         }
 
@@ -87,13 +93,13 @@ namespace BookStore.Business.Service.Implement
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<ResponseAuthDTO> Register(RegisterRequestDTO requestAuthDTO)
+        public async Task<ResponseMessage<AuthDTO>> Register(RegisterRequestDTO requestAuthDTO)
         {
             var existingUser = await _userRepository
                 .GetFirstOrDefaultAsync(u => u.Email.ToLower() == requestAuthDTO.email.ToLower());
 
             if (existingUser != null)
-                throw new NotFoundException("Email này đã tôn tại");
+                throw new NotFoundException("Email existed");
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(requestAuthDTO.password);
 
@@ -109,13 +115,18 @@ namespace BookStore.Business.Service.Implement
 
             var token = GenerateJwtToken(newUser);
 
-            return new ResponseAuthDTO
+            return new ResponseMessage<AuthDTO>()
             {
-                email = requestAuthDTO.email,
-                accessToken = token,
-                id = newUser.Id,
-                role = newUser.Role,
-                status = newUser.Status,
+                message = "Register successfully",
+                result = true,
+                value = new AuthDTO
+                {
+                    email = requestAuthDTO.email,
+                    accessToken = token,
+                    id = newUser.Id,
+                    role = newUser.Role,
+                    status = newUser.Status,
+                }
             };
         }
     }

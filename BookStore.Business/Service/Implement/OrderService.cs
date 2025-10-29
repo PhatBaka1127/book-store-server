@@ -50,7 +50,7 @@ namespace BookStore.Business.Service.Implement
                     if (book.Stock < item.quantity)
                         throw new ConflictException($"Book {book.Name} is out of stock");
 
-                    book.Stock -= (int) item.quantity;
+                    book.Stock -= (int)item.quantity;
                     _bookRepository.Update(book);
 
                     newOrder.OrderDetails.Add(new OrderDetail
@@ -140,10 +140,18 @@ namespace BookStore.Business.Service.Implement
             ThisUserObj user, PagingRequest paging, OrderFilter filter)
         {
             var (total, data) = _orderRepository.GetTable()
-                .Where(o => user.role != (int)RoleEnum.BUYER || o.BuyerId == user.userId)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Book)
+                .Where(o =>
+                    // BUYER
+                    (user.role == (int)RoleEnum.BUYER && o.BuyerId == user.userId)
+                    // SELLER
+                    || (user.role == (int) RoleEnum.SELLER && o.OrderDetails.Any(od => od.Book.SellerId == user.userId))
+                )
                 .ProjectTo<GetOrderDTO>(_mapper.ConfigurationProvider)
                 .PagingIQueryable(paging.page, paging.pageSize,
                                   PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
+
 
             return new DynamicResponseModel<GetOrderDTO>
             {

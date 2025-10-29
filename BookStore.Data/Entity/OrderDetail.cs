@@ -26,5 +26,7 @@ namespace BookStore.Data.Entity
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public decimal TotalPrice => UnitPrice * Quantity;
+        public int Status { get; set; }
+        public DateTime? UpdatedTime { get; set; }
     }
 }
