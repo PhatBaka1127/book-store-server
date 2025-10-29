@@ -95,5 +95,27 @@ namespace BookStore.Business.Service.Implement
                 results = await data.ToListAsync()
             };
         }
+
+        public async Task<ResponseMessage<bool>> UpdateBookAsync(int id, UpdateBookDTO updateBookDTO, ThisUserObj thisUserObj)
+        {
+            var existedBook = await _bookRepository.GetByIdAsync(id, isTracking: true);
+            if (existedBook == null)
+                throw new NotFoundException("Not found this book");
+
+            _mapper.Map(updateBookDTO, existedBook);
+
+            if (updateBookDTO.image != null && updateBookDTO.image.Length > 0)
+                existedBook.Image = await _cloudinaryService.UploadImageAsync(updateBookDTO.image);
+
+            await _bookRepository.UpdateAsync(existedBook);
+            await _bookRepository.SaveChangesAsync();
+
+            return new ResponseMessage<bool>
+            {
+                message = "Update successfully",
+                result = true,
+                value = true
+            };
+        }
     }
 }

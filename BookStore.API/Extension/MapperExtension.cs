@@ -13,8 +13,11 @@ namespace BookStore.API.Extension
             CreateMap<User, GetUserDTO>().ReverseMap();
 
             // BOOK
+            CreateMap<Book, BookDTO>().ReverseMap();
             CreateMap<Book, GetBookDTO>().ReverseMap();
             CreateMap<Book, CreateBookDTO>().ReverseMap();
+            CreateMap<Book, UpdateBookDTO>().ReverseMap()
+             .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
             // ORDER DETAIL
             CreateMap<OrderDetail, GetOrderDetailDTO>().ReverseMap();

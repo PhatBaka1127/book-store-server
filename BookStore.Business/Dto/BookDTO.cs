@@ -10,30 +10,35 @@ using System.Threading.Tasks;
 
 namespace BookStore.Business.Dto
 {
-    public class GetBookDTO
+    public class BookDTO
     {
-        public int? id { get; set; }
         public string? name { get; set; }
         public string? description { get; set; }
         public decimal? unitPrice { get; set; }
         public int? stock { get; set; }
         public int? status { get; set; }
+        public int? categoryId { get; set; }
+    }
+
+    public class GetBookDTO : BookDTO
+    {
+        public int? id { get; set; }
+       
         public string? image { get; set; }
         public int? sellerId { get; set; }
         public string? sellerName { get; set; }
-        public int? categoryId { get; set; }
+        
         public string? categoryName { get; set; }
     }
 
-    public class CreateBookDTO
+    public class CreateBookDTO : BookDTO
     {
-        public string? name { get; set; }
-        public string? description { get; set; }
-        public decimal? unitPrice { get; set; }
-        public int? stock { get; set; }
-        public int? status { get; set; }
         public IFormFile? image { get; set; }
-        public int? categoryId { get; set; }
+    }
+
+    public class UpdateBookDTO : BookDTO
+    {
+        public IFormFile? image { get; set; }
     }
 
     public class BookFilter

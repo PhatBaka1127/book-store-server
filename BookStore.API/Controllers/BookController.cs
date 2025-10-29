@@ -50,5 +50,15 @@ namespace BookStore.API.Controllers
             var result = await _bookService.GetBookByIdAsync(id);
             return Ok(result);
         }
+
+        [HttpPatch("{id}")]
+        [Authorize]
+        public async Task<IActionResult> UpdateBook(int id, [FromForm] UpdateBookDTO updateBookDTO)
+        {
+            ThisUserObj thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _bookService.UpdateBookAsync(id, updateBookDTO, thisUserObj);
+            return Ok(result);
+        }
     }
 }

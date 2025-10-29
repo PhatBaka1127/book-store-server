@@ -34,12 +34,11 @@ namespace BookStore.Data.Repository
             }
         }
 
-        public async Task<bool> UpdateAsync(TEntity entity)
+        public async Task UpdateAsync(TEntity entity)
         {
             try
             {
                 _context.Update(entity);
-                return await SaveChangesAsync();
             }
             catch (Exception ex)
             {

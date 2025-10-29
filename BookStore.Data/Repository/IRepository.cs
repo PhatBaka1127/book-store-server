@@ -12,7 +12,7 @@ namespace BookStore.Data.Repository
     public interface IRepository<TEntity> where TEntity : class
     {
         Task AddAsync(TEntity entity);
-        Task<bool> UpdateAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity);
         Task<bool> DeleteAsync(TEntity entity);
         Task<TEntity?> FindAsync(object id, bool isTracking = false);
         Task<TEntity?> GetByIdAsync(object id,
