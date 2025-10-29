@@ -46,7 +46,7 @@ namespace BookStore.Business.Service.Implement
             if (createBookDTO.image != null && createBookDTO.image.Length > 0)
                 newBook.Image = await _cloudinaryService.UploadImageAsync(createBookDTO.image);
 
-            await _bookRepository.AddAsync(newBook);
+            await _bookRepository.Add(newBook);
             await _bookRepository.SaveChangesAsync();
 
             return new ResponseMessage<int>()
@@ -54,6 +54,29 @@ namespace BookStore.Business.Service.Implement
                 message = "Create new book successfully",
                 result = true,
                 value = newBook.Id
+            };
+        }
+
+        public async Task<ResponseMessage<bool>> DeleteBookAsync(int id, ThisUserObj thisUserObj)
+        {
+            var existedBook = await _bookRepository.GetByIdAsync(id, includeProperties: x => x.Include(x => x.OrderDetails));
+            if (existedBook == null)
+                throw new NotFoundException("Book not found");
+
+            if (existedBook.OrderDetails.Count > 0)
+            {
+                existedBook.Status = 0;
+                await _bookRepository.Update(existedBook);
+            }
+            else
+                await _bookRepository.Delete(existedBook);
+
+            await _bookRepository.SaveChangesAsync();
+            return new ResponseMessage<bool>()
+            {
+                message = "Delete successfully",
+                result = true,
+                value = true
             };
         }
 
@@ -107,7 +130,7 @@ namespace BookStore.Business.Service.Implement
             if (updateBookDTO.image != null && updateBookDTO.image.Length > 0)
                 existedBook.Image = await _cloudinaryService.UploadImageAsync(updateBookDTO.image);
 
-            await _bookRepository.UpdateAsync(existedBook);
+            await _bookRepository.Update(existedBook);
             await _bookRepository.SaveChangesAsync();
 
             return new ResponseMessage<bool>

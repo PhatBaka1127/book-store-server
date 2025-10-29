@@ -53,7 +53,7 @@ namespace BookStore.Business.Service.Implement
             newOrder.CreatedDate = DateTime.UtcNow;
             newOrder.BuyerId = thisUserObj.userId;
 
-            await _orderRepository.AddAsync(newOrder);
+            await _orderRepository.Add(newOrder);
             await _orderRepository.SaveChangesAsync();
 
             return new ResponseMessage<int>()

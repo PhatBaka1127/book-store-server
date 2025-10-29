@@ -21,7 +21,7 @@ namespace BookStore.Data.Repository
             _table = context.Set<TEntity>();
         }
 
-        public async Task AddAsync(TEntity entity)
+        public async Task Add(TEntity entity)
         {
             try
             {
@@ -34,7 +34,7 @@ namespace BookStore.Data.Repository
             }
         }
 
-        public async Task UpdateAsync(TEntity entity)
+        public async Task Update(TEntity entity)
         {
             try
             {
@@ -47,12 +47,11 @@ namespace BookStore.Data.Repository
             }
         }
 
-        public async Task<bool> DeleteAsync(TEntity entity)
+        public async Task<bool> Delete(TEntity entity)
         {
             try
             {
                 _table.Remove(entity);
-                await SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)

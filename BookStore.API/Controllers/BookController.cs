@@ -60,5 +60,15 @@ namespace BookStore.API.Controllers
             var result = await _bookService.UpdateBookAsync(id, updateBookDTO, thisUserObj);
             return Ok(result);
         }
+
+        [HttpDelete("{id}")]
+        [Authorize]
+        public async Task<IActionResult> DeleteBook(int id, [FromForm] UpdateBookDTO updateBookDTO)
+        {
+            ThisUserObj thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _bookService.DeleteBookAsync(id, thisUserObj);
+            return Ok(result);
+        }
     }
 }

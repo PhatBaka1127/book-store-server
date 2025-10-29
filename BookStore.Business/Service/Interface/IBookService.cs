@@ -14,5 +14,6 @@ namespace BookStore.Business.Service.Interface
         public Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(PagingRequest pagingRequest, BookFilter bookFilter, ThisUserObj thisUserObj);
         public Task<ResponseMessage<GetBookDTO>> GetBookByIdAsync(int id);
         public Task<ResponseMessage<bool>> UpdateBookAsync(int id, UpdateBookDTO updateBookDTO, ThisUserObj thisUserObj);
+        public Task<ResponseMessage<bool>> DeleteBookAsync(int id, ThisUserObj thisUserObj);
     }
 }

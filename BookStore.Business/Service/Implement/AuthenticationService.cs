@@ -104,7 +104,7 @@ namespace BookStore.Business.Service.Implement
                 Role = requestAuthDTO.role
             };
 
-            await _userRepository.AddAsync(newUser);
+            await _userRepository.Add(newUser);
             await _userRepository.SaveChangesAsync();
 
             var token = GenerateJwtToken(newUser);

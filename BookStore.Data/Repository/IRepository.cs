@@ -11,9 +11,9 @@ namespace BookStore.Data.Repository
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task AddAsync(TEntity entity);
-        Task UpdateAsync(TEntity entity);
-        Task<bool> DeleteAsync(TEntity entity);
+        Task Add(TEntity entity);
+        Task Update(TEntity entity);
+        Task<bool> Delete(TEntity entity);
         Task<TEntity?> FindAsync(object id, bool isTracking = false);
         Task<TEntity?> GetByIdAsync(object id,
                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeProperties = null,
