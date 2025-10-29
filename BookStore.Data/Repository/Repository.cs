@@ -21,45 +21,11 @@ namespace BookStore.Data.Repository
             _table = context.Set<TEntity>();
         }
 
-        public async Task Add(TEntity entity)
-        {
-            try
-            {
-                await _table.AddAsync(entity);
-            }
-            catch (Exception ex)
-            {
-                LoggerService.Logger(ex.InnerException?.Message);
-                throw new Exception(ex.InnerException?.Message);
-            }
-        }
+        public void Add(TEntity entity) => _table.AddAsync(entity);
 
-        public async Task Update(TEntity entity)
-        {
-            try
-            {
-                _context.Update(entity);
-            }
-            catch (Exception ex)
-            {
-                LoggerService.Logger(ex.InnerException?.Message);
-                throw new Exception(ex.InnerException?.Message);
-            }
-        }
+        public void Update(TEntity entity) => _table.Update(entity);
 
-        public async Task<bool> Delete(TEntity entity)
-        {
-            try
-            {
-                _table.Remove(entity);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LoggerService.Logger(ex.InnerException?.Message);
-                throw new Exception(ex.InnerException?.Message);
-            }
-        }
+        public void Delete(TEntity entity) =>  _table.Remove(entity);
 
         public async Task<TEntity?> FindAsync(object id, bool isTracking = false)
         {
@@ -150,6 +116,21 @@ namespace BookStore.Data.Repository
             {
                 LoggerService.Logger(ex.InnerException?.Message);
                 throw new Exception(ex.InnerException?.Message);
+            }
+        }
+
+        public async Task ExecuteInTransactionAsync(Func<Task> action)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                await action();
+                await transaction.CommitAsync();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                throw;
             }
         }
     }

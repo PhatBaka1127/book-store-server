@@ -33,34 +33,49 @@ namespace BookStore.Business.Service.Implement
 
         public async Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderDTO createOrderDTO, ThisUserObj thisUserObj)
         {
-            Order newOrder = _mapper.Map<Order>(createOrderDTO);
+            int orderId = 0;
 
-            foreach (var createOrderDetailDTO in createOrderDTO.createOrderDetailDTOs)
+            await _bookRepository.ExecuteInTransactionAsync(async () =>
             {
-                var existedBook = await _bookRepository.FindAsync(createOrderDetailDTO.bookId);
-                if (existedBook == null)
-                    throw new NotFoundException($"Not found book {createOrderDetailDTO.bookId}");
-                OrderDetail orderDetail = new()
+                Order newOrder = _mapper.Map<Order>(createOrderDTO);
+                newOrder.BuyerId = thisUserObj.userId;
+                newOrder.CreatedDate = DateTime.UtcNow;
+
+                foreach (var item in createOrderDTO.createOrderDetailDTOs)
                 {
-                    BookId = existedBook.Id,
-                    Quantity = (int)createOrderDetailDTO.quantity,
-                    UnitPrice = existedBook.UnitPrice
-                };
-                newOrder.OrderDetails.Add(orderDetail);
-            }
+                    var book = await _bookRepository.FindAsync(item.bookId);
+                    if (book == null)
+                        throw new NotFoundException($"Book {item.bookId} not found");
 
-            newOrder.TotalPrice = newOrder.OrderDetails.Sum(x => x.TotalPrice);
-            newOrder.CreatedDate = DateTime.UtcNow;
-            newOrder.BuyerId = thisUserObj.userId;
+                    if (book.Stock < item.quantity)
+                        throw new ConflictException($"Book {book.Name} is out of stock");
 
-            await _orderRepository.Add(newOrder);
-            await _orderRepository.SaveChangesAsync();
+                    book.Stock -= (int) item.quantity;
+                    _bookRepository.Update(book);
 
-            return new ResponseMessage<int>()
+                    newOrder.OrderDetails.Add(new OrderDetail
+                    {
+                        BookId = book.Id,
+                        Quantity = (int)item.quantity,
+                        UnitPrice = book.UnitPrice
+                    });
+                }
+
+                newOrder.TotalPrice = newOrder.OrderDetails.Sum(x => x.TotalPrice);
+
+                _orderRepository.Add(newOrder);
+
+                await _bookRepository.SaveChangesAsync();
+                await _orderRepository.SaveChangesAsync();
+
+                orderId = newOrder.Id;
+            });
+
+            return new ResponseMessage<int>
             {
                 message = "Create order successfully",
                 result = true,
-                value = newOrder.Id
+                value = orderId
             };
         }
 

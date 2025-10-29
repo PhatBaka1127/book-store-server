@@ -46,7 +46,7 @@ namespace BookStore.Business.Service.Implement
             if (createBookDTO.image != null && createBookDTO.image.Length > 0)
                 newBook.Image = await _cloudinaryService.UploadImageAsync(createBookDTO.image);
 
-            await _bookRepository.Add(newBook);
+            _bookRepository.Add(newBook);
             await _bookRepository.SaveChangesAsync();
 
             return new ResponseMessage<int>()
@@ -66,10 +66,10 @@ namespace BookStore.Business.Service.Implement
             if (existedBook.OrderDetails.Count > 0)
             {
                 existedBook.Status = 0;
-                await _bookRepository.Update(existedBook);
+                _bookRepository.Update(existedBook);
             }
             else
-                await _bookRepository.Delete(existedBook);
+                _bookRepository.Delete(existedBook);
 
             await _bookRepository.SaveChangesAsync();
             return new ResponseMessage<bool>()
@@ -131,7 +131,7 @@ namespace BookStore.Business.Service.Implement
             if (updateBookDTO.image != null && updateBookDTO.image.Length > 0)
                 existedBook.Image = await _cloudinaryService.UploadImageAsync(updateBookDTO.image);
 
-            await _bookRepository.Update(existedBook);
+            _bookRepository.Update(existedBook);
             await _bookRepository.SaveChangesAsync();
 
             return new ResponseMessage<bool>

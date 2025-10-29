@@ -11,9 +11,9 @@ namespace BookStore.Data.Repository
 {
     public interface IRepository<TEntity> where TEntity : class
     {
-        Task Add(TEntity entity);
-        Task Update(TEntity entity);
-        Task<bool> Delete(TEntity entity);
+        void Add(TEntity entity);
+        void Update(TEntity entity);
+        void Delete(TEntity entity);
         Task<TEntity?> FindAsync(object id, bool isTracking = false);
         Task<TEntity?> GetByIdAsync(object id,
                                         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includeProperties = null,
@@ -26,5 +26,6 @@ namespace BookStore.Data.Repository
                                                     bool isTracking = false);
         IQueryable<TEntity> GetTable();
         Task<bool> SaveChangesAsync();
+        Task ExecuteInTransactionAsync(Func<Task> action);
     }
 }
