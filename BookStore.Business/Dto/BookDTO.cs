@@ -44,5 +44,6 @@ namespace BookStore.Business.Dto
     public class BookFilter
     {
         public string? name { get; set; }
+        public int? categoryId { get; set; }
     }
 }

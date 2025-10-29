@@ -99,7 +99,8 @@ namespace BookStore.Business.Service.Implement
         {
             var query = _bookRepository.GetTable()
                 .ProjectTo<GetBookDTO>(_mapper.ConfigurationProvider)
-                .Where(b => string.IsNullOrEmpty(filter.name) || b.name.Contains(filter.name));
+                .Where(b => string.IsNullOrEmpty(filter.name) || b.name.Contains(filter.name))
+                .Where(b => !filter.categoryId.HasValue || b.categoryId == filter.categoryId.Value);
 
             if (user.role == 1) // SELLER
                 query = query.Where(b => b.sellerId == user.userId);
