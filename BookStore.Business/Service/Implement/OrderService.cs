@@ -149,6 +149,7 @@ namespace BookStore.Business.Service.Implement
                     || (user.role == (int) RoleEnum.SELLER && o.OrderDetails.Any(od => od.Book.SellerId == user.userId))
                 )
                 .ProjectTo<GetOrderDTO>(_mapper.ConfigurationProvider)
+                .DynamicFilter(_mapper.Map<GetOrderDTO>(filter))
                 .PagingIQueryable(paging.page, paging.pageSize,
                                   PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
 

@@ -31,7 +31,6 @@ namespace BookStore.Data.Entity
         public string Address { get; set; }
         public string Phone { get; set; }
         public int Status { get; set; }
-        public DateTime? UpdatedDate { get; set; }
 
         [InverseProperty(nameof(OrderDetail.Order))]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

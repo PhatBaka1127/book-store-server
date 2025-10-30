@@ -15,7 +15,7 @@ namespace BookStore.Business.Dto
         public string? createdDate { get; set; }
         public int? quantity { get; set; }
         public decimal? totalPrice { get; set; }
-        public OrderStatus status { get; set; }
+        public int? status { get; set; }
         public string? address { get; set; }
         public string? phone { get; set; }
     }
@@ -38,7 +38,7 @@ namespace BookStore.Business.Dto
     {
         public DateTime? startTime { get; set; }
         public DateTime? endTime { get; set; }
-        public OrderStatus status { get; set; }
+        public OrderStatus? status { get; set; }
     }
 
     public enum OrderStatus
