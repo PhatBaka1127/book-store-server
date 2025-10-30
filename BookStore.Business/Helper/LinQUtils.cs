@@ -19,6 +19,20 @@ namespace BookStore.Business.Helper
             var filterProps = typeof(TFilter).GetProperties();
             var entityProps = typeof(TEntity).GetProperties().Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
 
+            var startTimeProp = filterProps.FirstOrDefault(p => p.Name.Equals("startTime", StringComparison.OrdinalIgnoreCase));
+            var endTimeProp = filterProps.FirstOrDefault(p => p.Name.Equals("endTime", StringComparison.OrdinalIgnoreCase));
+
+            var startTime = (DateTime?)startTimeProp?.GetValue(filter);
+            var endTime = (DateTime?)endTimeProp?.GetValue(filter);
+
+            if (startTime.HasValue && endTime.HasValue)
+            {
+                if (entityProps.Contains("CreatedDate"))
+                {
+                    source = source.Where($"CreatedDate >= @0 && CreatedDate <= @1", startTime.Value, endTime.Value);
+                }
+            }
+
             foreach (var prop in filterProps)
             {
                 var val = prop.GetValue(filter);
@@ -29,12 +43,6 @@ namespace BookStore.Business.Helper
                 if (!entityProps.Contains(prop.Name) && !hasSortAttr) continue;
 
                 if (prop.CustomAttributes.Any(a => a.AttributeType == typeof(SkipAttribute))) continue;
-
-                if (val is DateTime dt)
-                {
-                    source = source.Where($"{prop.Name} >= @0 && {prop.Name} < @1", dt.Date, dt.Date.AddDays(1));
-                    continue;
-                }
 
                 if (hasSortAttr)
                 {

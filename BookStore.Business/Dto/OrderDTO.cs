@@ -31,15 +31,34 @@ namespace BookStore.Business.Dto
     {
         public string phone { get; set; }
         public string address { get; set; }
-        public int status = (int) OrderStatus.ORDERED;
-        public int quantity => (int) createOrderDetailDTOs.Sum(x => x.quantity);
+        public int status = (int)OrderStatus.ORDERED;
+        public int quantity => (int)createOrderDetailDTOs.Sum(x => x.quantity);
         public CreateOrderDetailDTO[] createOrderDetailDTOs { get; set; }
     }
 
     public class OrderFilter
     {
-        public DateTime? startTime { get; set; }
-        public DateTime? endTime { get; set; }
+        private DateTime? _startTime;
+        private DateTime? _endTime;
+
+        public DateTime? startTime
+        {
+            get => _startTime;
+            set => _startTime = value.HasValue
+                ? DateTime.SpecifyKind(value.Value.Date, DateTimeKind.Utc) // Bắt đầu từ đầu ngày UTC
+                : null;
+        }
+
+        public DateTime? endTime
+        {
+            get => _endTime;
+            set => _endTime = value.HasValue
+                ? DateTime.SpecifyKind(
+                    value.Value.Date.AddDays(1).AddTicks(-1), // Cuối ngày: 23:59:59.9999999
+                    DateTimeKind.Utc)
+                : null;
+        }
+
         public OrderStatus? status { get; set; }
         [Sort]
         public string? sort { get; set; }
@@ -59,7 +78,7 @@ namespace BookStore.Business.Dto
         public DateTime? endDate { get; set; }
         public ReportFilterEnum reportFilterEnum { get; set; }
     }
-    
+
     public class DashboardSummaryDTO
     {
         public int TotalOrders { get; set; }
