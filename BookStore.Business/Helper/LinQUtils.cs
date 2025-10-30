@@ -11,66 +11,60 @@ namespace BookStore.Business.Helper
 {
     public static class LinQUtils
     {
-        public static IQueryable<TEntity> DynamicFilter<TEntity>(this IQueryable<TEntity> source, TEntity entity)
+        public static IQueryable<TEntity> DynamicFilter<TEntity, TFilter>(
+                this IQueryable<TEntity> source, TFilter filter)
         {
-            var properties = entity.GetType().GetProperties();
-            foreach (var item in properties)
+            if (filter == null) return source;
+
+            var filterProps = typeof(TFilter).GetProperties();
+            var entityProps = typeof(TEntity).GetProperties().Select(p => p.Name).ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            foreach (var prop in filterProps)
             {
-                if (entity.GetType().GetProperty(item.Name) == null) continue;
+                var val = prop.GetValue(filter);
+                if (val == null) continue;
 
-                if (item.PropertyType != typeof(string))
+                bool hasSortAttr = prop.CustomAttributes.Any(a => a.AttributeType == typeof(SortAttribute));
+
+                if (!entityProps.Contains(prop.Name) && !hasSortAttr) continue;
+
+                if (prop.CustomAttributes.Any(a => a.AttributeType == typeof(SkipAttribute))) continue;
+
+                if (val is DateTime dt)
                 {
-                    if (typeof(ICollection<>).IsAssignableFrom(item.PropertyType.GetGenericTypeDefinition())) continue;
+                    source = source.Where($"{prop.Name} >= @0 && {prop.Name} < @1", dt.Date, dt.Date.AddDays(1));
+                    continue;
                 }
 
+                if (hasSortAttr)
+                {
+                    var sortParts = val.ToString()?.Split(',', StringSplitOptions.TrimEntries);
+                    if (sortParts == null || sortParts.Length == 0) continue;
 
-                var propertyVal = entity.GetType().GetProperty(item.Name).GetValue(entity, null);
-                if (propertyVal == null) continue;
-                if (item.CustomAttributes.Any(a => a.AttributeType == typeof(SkipAttribute))) continue;
-                bool isDateTime = typeof(DateTime).IsAssignableFrom(item.PropertyType) || typeof(DateTime?).IsAssignableFrom(item.PropertyType);
-                if (isDateTime)
-                {
-                    DateTime dt = (DateTime)propertyVal;
-                    source = source.Where($"{item.Name} >= @0 && {item.Name} < @1", dt.Date, dt.Date.AddDays(1));
-                }
-                else if (item.CustomAttributes.Any(a => a.AttributeType == typeof(ContainAttribute)))
-                {
-                    var array = (IList)propertyVal;
-                    source = source.Where($"{item.Name}.Any(a=> @0.Contains(a))", array);
-                }
-                else if (item.CustomAttributes.Any(a => a.AttributeType == typeof(SortAttribute)))
-                {
-                    string[] sort = propertyVal.ToString().Split(", ");
-                    if (sort.Length == 2)
-                    {
-                        if (sort[1].Equals("asc"))
-                        {
-                            source = source.OrderBy(sort[0]);
-                        }
+                    var sortField = sortParts[0];
+                    var direction = sortParts.Length > 1 ? sortParts[1].ToLower() : "asc";
 
-                        if (sort[1].Equals("desc"))
-                        {
-                            source = source.OrderBy(sort[0] + " descending");
-                        }
-                    }
-                    else
-                    {
-                        source = source.OrderBy(sort[0]);
-                    }
+                    if (!entityProps.Contains(sortField)) continue;
+
+                    source = direction == "desc"
+                        ? source.OrderBy($"{sortField} descending")
+                        : source.OrderBy($"{sortField}");
+                    continue;
                 }
-                else if (item.PropertyType == typeof(string))
+
+                if (val is string s)
                 {
-                    source = source.Where($"{item.Name}.ToLower().Contains(@0)", ((string)propertyVal).Trim().ToLower());
+                    source = source.Where($"{prop.Name}.ToLower().Contains(@0)", s.Trim().ToLower());
+                    continue;
                 }
-                else
-                {
-                    source = source.Where($"{item.Name} = \"{propertyVal}\"");
-                }
+
+                source = source.Where($"{prop.Name} == @0", val);
             }
+
             return source;
         }
 
-        public static (int, IQueryable<TResult>) PagingIQueryable<TResult>(this IQueryable<TResult> source, int page, int size,  int limitPaging, int defaultPaging)
+        public static (int, IQueryable<TResult>) PagingIQueryable<TResult>(this IQueryable<TResult> source, int page, int size, int limitPaging, int defaultPaging)
         {
             try
             {

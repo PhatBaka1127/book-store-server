@@ -1,4 +1,5 @@
-﻿using BookStore.Data.Entity;
+﻿using BookStore.Business.Helper;
+using BookStore.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 
 namespace BookStore.Business.Dto
 {
@@ -39,6 +41,8 @@ namespace BookStore.Business.Dto
         public DateTime? startTime { get; set; }
         public DateTime? endTime { get; set; }
         public OrderStatus? status { get; set; }
+        [Sort]
+        public string? sort { get; set; }
     }
 
     public enum OrderStatus
