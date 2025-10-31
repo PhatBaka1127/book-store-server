@@ -21,7 +21,7 @@ namespace BookStore.API.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequestDTO)
         {
             var result = await _authService.Login(loginRequestDTO);
             return Ok(result);
@@ -29,9 +29,17 @@ namespace BookStore.API.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO registerRequestDTO)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequestDTO)
         {
             var result = await _authService.Register(registerRequestDTO);
+            return Ok(result);
+        }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GenerateRefreshToken([FromBody] TokenRequest tokenRequest)
+        {
+            var result = await _authService.GenerateRefreshToken(tokenRequest);
             return Ok(result);
         }
     }

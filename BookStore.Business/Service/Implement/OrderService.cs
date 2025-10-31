@@ -31,7 +31,7 @@ namespace BookStore.Business.Service.Implement
             _mapper = mapper;
         }
 
-        public async Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderDTO createOrderDTO, ThisUserObj thisUserObj)
+        public async Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderRequest createOrderDTO, ThisUserObj thisUserObj)
         {
             int orderId = 0;
 
@@ -79,22 +79,22 @@ namespace BookStore.Business.Service.Implement
             };
         }
 
-        public async Task<ResponseMessage<GetDetailOrderDTO>> GetOrderById(int id)
+        public async Task<ResponseMessage<DetailOrderResponse>> GetOrderById(int id)
         {
             var existedOrder = await _orderRepository.GetByIdAsync(id, includeProperties: x => x.Include(x => x.OrderDetails)
                                                                                                     .ThenInclude(x => x.Book)
                                                                                                 .Include(x => x.Buyer));
             if (existedOrder == null)
                 throw new NotFoundException("Order not found");
-            return new ResponseMessage<GetDetailOrderDTO>()
+            return new ResponseMessage<DetailOrderResponse>()
             {
                 message = "Order found",
                 result = true,
-                value = _mapper.Map<GetDetailOrderDTO>(existedOrder)
+                value = _mapper.Map<DetailOrderResponse>(existedOrder)
             };
         }
 
-        public async Task<List<DailySummaryDTO>> GetOrderReport(ThisUserObj thisUserObj, ReportFilter reportFilter)
+        public async Task<List<DailySummaryResponse>> GetOrderReport(ThisUserObj thisUserObj, ReportFilter reportFilter)
         {
             var query = _orderRepository.GetTable()
                             .Where(o => o.OrderDetails.Any(od => od.Book.SellerId == thisUserObj.userId));
@@ -107,7 +107,7 @@ namespace BookStore.Business.Service.Implement
             var groupedQuery = reportFilter.reportFilterEnum switch
             {
                 ReportFilterEnum.MONTH => query.GroupBy(o => new { o.CreatedDate.Year, o.CreatedDate.Month })
-                                .Select(g => new DailySummaryDTO
+                                .Select(g => new DailySummaryResponse
                                 {
                                     Date = DateTime.SpecifyKind(new DateTime(g.Key.Year, g.Key.Month, 1), DateTimeKind.Utc),
                                     Orders = g.Count(),
@@ -115,7 +115,7 @@ namespace BookStore.Business.Service.Implement
                                     Revenue = g.Sum(o => o.TotalPrice)
                                 }),
                 ReportFilterEnum.YEAR => query.GroupBy(o => o.CreatedDate.Year)
-                               .Select(g => new DailySummaryDTO
+                               .Select(g => new DailySummaryResponse
                                {
                                    Date = new DateTime(g.Key, 1, 1),
                                    Orders = g.Count(),
@@ -123,7 +123,7 @@ namespace BookStore.Business.Service.Implement
                                    Revenue = g.Sum(o => o.TotalPrice)
                                }),
                 _ => query.GroupBy(o => o.CreatedDate.Date)
-                         .Select(g => new DailySummaryDTO
+                         .Select(g => new DailySummaryResponse
                          {
                              Date = g.Key,
                              Orders = g.Count(),
@@ -136,7 +136,7 @@ namespace BookStore.Business.Service.Implement
             return result;
         }
 
-        public async Task<DynamicResponseModel<GetOrderDTO>> GetOrders(
+        public async Task<DynamicResponseModel<OrderResponse>> GetOrders(
             ThisUserObj user, PagingRequest paging, OrderFilter filter)
         {
             var (total, data) = _orderRepository.GetTable()
@@ -149,12 +149,12 @@ namespace BookStore.Business.Service.Implement
                     || (user.role == (int) RoleEnum.SELLER && o.OrderDetails.Any(od => od.Book.SellerId == user.userId))
                 )
                 .DynamicFilter<Order, OrderFilter>(filter)
-                .ProjectTo<GetOrderDTO>(_mapper.ConfigurationProvider)
+                .ProjectTo<OrderResponse>(_mapper.ConfigurationProvider)
                 .PagingIQueryable(paging.page, paging.pageSize,
                                   PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
 
 
-            return new DynamicResponseModel<GetOrderDTO>
+            return new DynamicResponseModel<OrderResponse>
             {
                 metaData = new MetaData
                 {

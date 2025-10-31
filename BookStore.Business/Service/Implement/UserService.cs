@@ -25,12 +25,12 @@ namespace BookStore.Business.Service.Implement
             _mapper = mapper;
         }
 
-        public async Task<GetUserDTO> GetUserByEmailAsync(string email)
+        public async Task<UserResponse> GetUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
             if (user != null)
             {
-                GetUserDTO userDTO = _mapper.Map<GetUserDTO>(user);
+                UserResponse userDTO = _mapper.Map<UserResponse>(user);
                 return userDTO;
             }
             else

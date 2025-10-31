@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Business.Dto
 {
-    public class GetOrderDetailDTO
+    public class OrderDetailResponse
     {
         public int? orderId { get; set; }
         public int? bookId { get; set; }
@@ -20,7 +20,7 @@ namespace BookStore.Business.Dto
         public string? bookImage { get; set; }
     }
 
-    public class CreateOrderDetailDTO
+    public class CreateOrderDetailRequest
     {
         public int? bookId { get; set; }
         public int? quantity { get; set; }

@@ -16,7 +16,7 @@ namespace BookStore.Business.Dto
         public int? role { get; set; }
     }
 
-    public class LoginRequestDTO
+    public class LoginRequest
     {
         [Required(ErrorMessage = "Email không được bỏ trống")]
         public string? email { get; set; }
@@ -24,7 +24,7 @@ namespace BookStore.Business.Dto
         public string? password { get; set; }
     }
 
-    public class RegisterRequestDTO
+    public class RegisterRequest
     {
         [Required(ErrorMessage = "Email không được bỏ trống")]
         public string? email { get; set; }
@@ -34,23 +34,32 @@ namespace BookStore.Business.Dto
         public int role { get; set; }
     }
 
-    public class AuthDTO
+    public class AuthResponse
     {
         public int id { get; set; }
         public string? email { get; set; }
-        public int role { get; set; } 
+        public int role { get; set; }
         public int status { get; set; }
         public string? accessToken { get; set; }
+        public string? refreshToken { get; set; }
+    }
+    
+    public class TokenRequest
+    {
+        [Required(ErrorMessage = "Access token is required")]
+        public string accessToken { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Refresh token is required")]
+        public string refreshToken { get; set; } = string.Empty;
     }
 
-    public class GetUserDTO
+    public class UserResponse
     {
         public int? id { get; set; }
         public string? email { get; set; }
         public int? role { get; set; }
         public int? status { get; set; }
         public string? image { get; set; }
-        public ICollection<GetOrderDTO>? orders { get; set; }
+        public ICollection<OrderResponse>? orders { get; set; }
         public ICollection<GetBookDTO>? books { get; set; }
     }
 

@@ -10,6 +10,6 @@ namespace BookStore.Business.Service.Interface
 {
     public interface IUserService
     {
-        public Task<GetUserDTO> GetUserByEmailAsync(string email);
+        public Task<UserResponse> GetUserByEmailAsync(string email);
     }
 }

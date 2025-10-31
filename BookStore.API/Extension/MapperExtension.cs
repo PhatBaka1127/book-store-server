@@ -10,7 +10,7 @@ namespace BookStore.API.Extension
         public MappingProfile()
         {
             // USER
-            CreateMap<User, GetUserDTO>().ReverseMap();
+            CreateMap<User, UserResponse>().ReverseMap();
 
             // BOOK
             CreateMap<Book, BookDTO>().ReverseMap();
@@ -20,13 +20,13 @@ namespace BookStore.API.Extension
              .ForAllMembers(opt => opt.Condition((src, dest, srcMember) => srcMember != null));
 
             // ORDER DETAIL
-            CreateMap<OrderDetail, GetOrderDetailDTO>().ReverseMap();
+            CreateMap<OrderDetail, OrderDetailResponse>().ReverseMap();
 
             // ORDER
-            CreateMap<Order, GetOrderDTO>().ReverseMap();
-            CreateMap<Order, GetDetailOrderDTO>().ReverseMap();
-            CreateMap<Order, CreateOrderDTO>().ReverseMap();
-            CreateMap<GetOrderDTO, OrderFilter>().ReverseMap();
+            CreateMap<Order, OrderResponse>().ReverseMap();
+            CreateMap<Order, DetailOrderResponse>().ReverseMap();
+            CreateMap<Order, CreateOrderRequest>().ReverseMap();
+            CreateMap<OrderResponse, OrderFilter>().ReverseMap();
 
             // CATEGORY
             CreateMap<Category, GetCategoryDTO>().ReverseMap();

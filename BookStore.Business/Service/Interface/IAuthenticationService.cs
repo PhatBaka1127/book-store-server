@@ -11,7 +11,8 @@ namespace BookStore.Business.Service.Interface
 {
     public interface IAuthenticationService
     {
-        public Task<ResponseMessage<AuthDTO>> Login(LoginRequestDTO requestAuthDTO);
-        public Task<ResponseMessage<AuthDTO>> Register(RegisterRequestDTO requestAuthDTO);
+        public Task<ResponseMessage<AuthResponse>> Login(LoginRequest requestAuthDTO);
+        public Task<ResponseMessage<AuthResponse>> Register(RegisterRequest requestAuthDTO);
+        public Task<ResponseMessage<AuthResponse>> GenerateRefreshToken(TokenRequest tokenRequest);
     }
 }

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,10 +36,11 @@ namespace BookStore.Business.Service.Implement
             _mapper = mapper;
         }
 
-        public async Task<ResponseMessage<AuthDTO>> Login(LoginRequestDTO requestAuthDTO)
+        public async Task<ResponseMessage<AuthResponse>> Login(LoginRequest requestAuthDTO)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(
-                x => x.Email.ToLower() == requestAuthDTO.email.ToLower()
+                x => x.Email.ToLower() == requestAuthDTO.email.ToLower(),
+                isTracking: true
             );
 
             if (user == null)
@@ -49,24 +51,42 @@ namespace BookStore.Business.Service.Implement
             if (!validPassword)
                 throw new NotFoundException("Wrong password");
 
-            string token = GenerateJwtToken(user);
+            string accessToken = GenerateAccessToken(user);
+            var refreshToken = GenerateRefreshToken();
 
-            return new ResponseMessage<AuthDTO>()
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+
+            return new ResponseMessage<AuthResponse>()
             {
                 message = "Login successfully",
                 result = true,
-                value = new AuthDTO()
+                value = new AuthResponse()
                 {
-                    accessToken = token,
+                    accessToken = accessToken,
                     email = user.Email,
                     id = user.Id,
                     role = user.Role,
                     status = user.Status,
+                    refreshToken = refreshToken
                 }
             };
         }
 
-        public string GenerateJwtToken(User user)
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
+        }
+
+        private string GenerateAccessToken(User user)
         {
             var jwtSection = _config.GetSection("Jwt");
 
@@ -93,7 +113,7 @@ namespace BookStore.Business.Service.Implement
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<ResponseMessage<AuthDTO>> Register(RegisterRequestDTO requestAuthDTO)
+        public async Task<ResponseMessage<AuthResponse>> Register(RegisterRequest requestAuthDTO)
         {
             var existingUser = await _userRepository
                 .GetFirstOrDefaultAsync(u => u.Email.ToLower() == requestAuthDTO.email.ToLower());
@@ -113,19 +133,50 @@ namespace BookStore.Business.Service.Implement
             _userRepository.Add(newUser);
             await _userRepository.SaveChangesAsync();
 
-            var token = GenerateJwtToken(newUser);
+            var token = GenerateAccessToken(newUser);
 
-            return new ResponseMessage<AuthDTO>()
+            return new ResponseMessage<AuthResponse>()
             {
                 message = "Register successfully",
                 result = true,
-                value = new AuthDTO
+                value = new AuthResponse
                 {
                     email = requestAuthDTO.email,
                     accessToken = token,
                     id = newUser.Id,
                     role = newUser.Role,
                     status = newUser.Status,
+                }
+            };
+        }
+
+        public async Task<ResponseMessage<AuthResponse>> GenerateRefreshToken(TokenRequest tokenRequest)
+        {
+            var user = await _userRepository.GetFirstOrDefaultAsync(x => x.RefreshToken == tokenRequest.refreshToken);
+            if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+                throw new UnauthorizedException("Invalid or expired refresh token. Please login again");
+
+            var newAccessToken = GenerateAccessToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            _userRepository.Update(user);
+            await _userRepository.SaveChangesAsync();
+
+            return new ResponseMessage<AuthResponse>()
+            {
+                message = "Renewed refresh token",
+                result = true,
+                value = new AuthResponse()
+                {
+                    id = user.Id,
+                    accessToken = newAccessToken,
+                    email = user.Email,
+                    refreshToken = newRefreshToken,
+                    role = user.Role,
+                    status = user.Status
                 }
             };
         }

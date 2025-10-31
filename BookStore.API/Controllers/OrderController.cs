@@ -26,7 +26,7 @@ namespace BookStore.API.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderDTO createOrderDTO)
+        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest createOrderDTO)
         {
             ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 

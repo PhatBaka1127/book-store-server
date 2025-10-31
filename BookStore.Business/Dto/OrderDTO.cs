@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Business.Dto
 {
-    public class GetOrderDTO
+    public class OrderResponse
     {
         public int? id { get; set; }
         public string? createdDate { get; set; }
@@ -22,18 +22,18 @@ namespace BookStore.Business.Dto
         public string? phone { get; set; }
     }
 
-    public class GetDetailOrderDTO : GetOrderDTO
+    public class DetailOrderResponse : OrderResponse
     {
-        public GetOrderDetailDTO[] orderDetails { get; set; }
+        public OrderDetailResponse[] orderDetails { get; set; }
     }
 
-    public class CreateOrderDTO
+    public class CreateOrderRequest
     {
         public string phone { get; set; }
         public string address { get; set; }
         public int status = (int)OrderStatus.ORDERED;
         public int quantity => (int)createOrderDetailDTOs.Sum(x => x.quantity);
-        public CreateOrderDetailDTO[] createOrderDetailDTOs { get; set; }
+        public CreateOrderDetailRequest[] createOrderDetailDTOs { get; set; }
     }
 
     public class OrderFilter
@@ -79,14 +79,14 @@ namespace BookStore.Business.Dto
         public ReportFilterEnum reportFilterEnum { get; set; }
     }
 
-    public class DashboardSummaryDTO
+    public class DashboardSummaryResponse
     {
         public int TotalOrders { get; set; }
         public decimal TotalRevenue { get; set; }
-        public List<DailySummaryDTO> DailySummaries { get; set; } = new();
+        public List<DailySummaryResponse> DailySummaries { get; set; } = new();
     }
 
-    public class DailySummaryDTO
+    public class DailySummaryResponse
     {
         public DateTime Date { get; set; }
         public int Orders { get; set; }
