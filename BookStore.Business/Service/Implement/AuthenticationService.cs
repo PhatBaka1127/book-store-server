@@ -1,19 +1,14 @@
 ﻿using AutoMapper;
 using BookStore.Business.Dto;
 using BookStore.Business.Helper;
-using BookStore.Business.Service.Implement;
 using BookStore.Business.Service.Interface;
 using BookStore.Data.Entity;
 using BookStore.Data.Helper;
 using BookStore.Data.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -51,7 +46,7 @@ namespace BookStore.Business.Service.Implement
             if (!validPassword)
                 throw new NotFoundException("Wrong password");
 
-            string accessToken = GenerateAccessToken(user);
+            var (accessToken, expireAt) = GenerateAccessToken(user);
             var refreshToken = GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
@@ -66,27 +61,18 @@ namespace BookStore.Business.Service.Implement
                 result = true,
                 value = new AuthResponse()
                 {
-                    accessToken = accessToken,
-                    email = user.Email,
                     id = user.Id,
+                    email = user.Email,
                     role = user.Role,
                     status = user.Status,
-                    refreshToken = refreshToken
+                    accessToken = accessToken,
+                    refreshToken = refreshToken,
+                    expireAt = expireAt
                 }
             };
         }
 
-        private string GenerateRefreshToken()
-        {
-            var randomNumber = new byte[32];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(randomNumber);
-                return Convert.ToBase64String(randomNumber);
-            }
-        }
-
-        private string GenerateAccessToken(User user)
+        private (string token, DateTime expireAt) GenerateAccessToken(User user)
         {
             var jwtSection = _config.GetSection("Jwt");
 
@@ -100,17 +86,27 @@ namespace BookStore.Business.Service.Implement
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSection["Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            var expires = DateTime.Now.AddHours(double.Parse(jwtSection["ExpireHours"] ?? "2"));
+            var expireHours = double.Parse(jwtSection["ExpireHours"] ?? "2");
+            var expireAt = DateTime.UtcNow.AddHours(expireHours);
 
             var token = new JwtSecurityToken(
                 issuer: jwtSection["Issuer"],
                 audience: jwtSection["Audience"],
                 claims: claims,
-                expires: expires,
+                expires: expireAt,
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+            return (tokenString, expireAt);
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
         public async Task<ResponseMessage<AuthResponse>> Register(RegisterRequest requestAuthDTO)
@@ -133,7 +129,7 @@ namespace BookStore.Business.Service.Implement
             _userRepository.Add(newUser);
             await _userRepository.SaveChangesAsync();
 
-            var token = GenerateAccessToken(newUser);
+            var (token, expireAt) = GenerateAccessToken(newUser);
 
             return new ResponseMessage<AuthResponse>()
             {
@@ -141,11 +137,12 @@ namespace BookStore.Business.Service.Implement
                 result = true,
                 value = new AuthResponse
                 {
-                    email = requestAuthDTO.email,
-                    accessToken = token,
                     id = newUser.Id,
+                    email = requestAuthDTO.email,
                     role = newUser.Role,
                     status = newUser.Status,
+                    accessToken = token,
+                    expireAt = expireAt
                 }
             };
         }
@@ -156,7 +153,7 @@ namespace BookStore.Business.Service.Implement
             if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
                 throw new UnauthorizedException("Invalid or expired refresh token. Please login again");
 
-            var newAccessToken = GenerateAccessToken(user);
+            var (newAccessToken, expireAt) = GenerateAccessToken(user);
             var newRefreshToken = GenerateRefreshToken();
 
             user.RefreshToken = newRefreshToken;
@@ -172,14 +169,14 @@ namespace BookStore.Business.Service.Implement
                 value = new AuthResponse()
                 {
                     id = user.Id,
-                    accessToken = newAccessToken,
                     email = user.Email,
-                    refreshToken = newRefreshToken,
                     role = user.Role,
-                    status = user.Status
+                    status = user.Status,
+                    accessToken = newAccessToken,
+                    refreshToken = newRefreshToken,
+                    expireAt = expireAt
                 }
             };
         }
     }
 }
-

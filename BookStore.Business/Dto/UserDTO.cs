@@ -41,6 +41,7 @@ namespace BookStore.Business.Dto
         public int role { get; set; }
         public int status { get; set; }
         public string? accessToken { get; set; }
+        public DateTime? expireAt { get; set; }
         public string? refreshToken { get; set; }
     }
     
