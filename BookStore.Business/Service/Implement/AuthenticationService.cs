@@ -151,7 +151,7 @@ namespace BookStore.Business.Service.Implement
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.RefreshToken == tokenRequest.refreshToken);
             if (user == null || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
-                throw new UnauthorizedException("Invalid or expired refresh token. Please login again");
+                throw new AuthorizedException("Invalid or expired refresh token. Please login again");
 
             var (newAccessToken, expireAt) = GenerateAccessToken(user);
             var newRefreshToken = GenerateRefreshToken();

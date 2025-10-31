@@ -36,9 +36,12 @@ namespace BookStore.API.Controllers
 
         [HttpGet()]
         public async Task<IActionResult> GetBooks([FromQuery] BookFilter bookFilter,
-                                                        [FromQuery] PagingRequest pagingRequest)
+                                                        [FromQuery] PagingRequest pagingRequest,
+                                                        int sellerId = 0)
         {
-            ThisUserObj thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+            ThisUserObj thisUserObj = null;
+            if (sellerId != 0)
+                thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 
             var result = await _bookService.GetBooksAsync(pagingRequest, bookFilter, thisUserObj);
             return Ok(result);

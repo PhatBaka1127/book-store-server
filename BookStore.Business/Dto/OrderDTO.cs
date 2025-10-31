@@ -15,11 +15,14 @@ namespace BookStore.Business.Dto
     {
         public int? id { get; set; }
         public string? createdDate { get; set; }
+        public string? updatedDate { get; set; } = "N/A";
         public int? quantity { get; set; }
         public decimal? totalPrice { get; set; }
         public int? status { get; set; }
         public string? address { get; set; }
         public string? phone { get; set; }
+        public string? buyerId { get; set; }
+        public string? buyerEmail { get; set; }
     }
 
     public class DetailOrderResponse : OrderResponse

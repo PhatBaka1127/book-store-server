@@ -79,13 +79,20 @@ namespace BookStore.Business.Service.Implement
             };
         }
 
-        public async Task<ResponseMessage<DetailOrderResponse>> GetOrderById(int id)
+        public async Task<ResponseMessage<DetailOrderResponse>> GetOrderById(int id, ThisUserObj thisUserObj)
         {
             var existedOrder = await _orderRepository.GetByIdAsync(id, includeProperties: x => x.Include(x => x.OrderDetails)
                                                                                                     .ThenInclude(x => x.Book)
                                                                                                 .Include(x => x.Buyer));
             if (existedOrder == null)
                 throw new NotFoundException("Order not found");
+            if (thisUserObj.role == 0 && thisUserObj.userId != existedOrder.BuyerId)
+                throw new ForbiddenException("Forbidden");
+
+            existedOrder.OrderDetails = existedOrder.OrderDetails.Where(x => x.Book.SellerId == thisUserObj.userId).ToList();
+            existedOrder.Quantity = existedOrder.OrderDetails.Sum(x => x.Quantity);
+            existedOrder.TotalPrice = existedOrder.OrderDetails.Sum(x => x.TotalPrice);
+
             return new ResponseMessage<DetailOrderResponse>()
             {
                 message = "Order found",
@@ -146,13 +153,12 @@ namespace BookStore.Business.Service.Implement
                     // BUYER
                     (user.role == (int)RoleEnum.BUYER && o.BuyerId == user.userId)
                     // SELLER
-                    || (user.role == (int) RoleEnum.SELLER && o.OrderDetails.Any(od => od.Book.SellerId == user.userId))
+                    || (user.role == (int)RoleEnum.SELLER && o.OrderDetails.Any(od => od.Book.SellerId == user.userId))
                 )
                 .DynamicFilter<Order, OrderFilter>(filter)
                 .ProjectTo<OrderResponse>(_mapper.ConfigurationProvider)
                 .PagingIQueryable(paging.page, paging.pageSize,
                                   PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
-
 
             return new DynamicResponseModel<OrderResponse>
             {

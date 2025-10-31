@@ -42,9 +42,13 @@ namespace BookStore.Business.Middleware
             var statusCode = (int)HttpStatusCode.InternalServerError;
             switch (ex)
             {
-                case UnauthorizedException:
+                case AuthorizedException:
                     errorMessageObject.code = "401";
                     statusCode = (int)HttpStatusCode.Unauthorized;
+                    break;
+                case ForbiddenException:
+                    errorMessageObject.code = "403";
+                    statusCode = (int)HttpStatusCode.Forbidden;
                     break;
                 case NotFoundException:
                     errorMessageObject.code = "404";

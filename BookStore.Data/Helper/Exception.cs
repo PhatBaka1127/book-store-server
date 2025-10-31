@@ -13,9 +13,9 @@ namespace BookStore.Data.Helper
         }
     }
 
-    public class UnauthorizedException : Exception
+    public class AuthorizedException : Exception
     {
-        public UnauthorizedException(string message) : base(message)
+        public AuthorizedException(string message) : base(message)
         {
         }
     }
@@ -26,12 +26,20 @@ namespace BookStore.Data.Helper
         {
         }
     }
-    
+
     public class FileException : Exception
     {
         public FileException(string message) : base(message)
         {
-            
+
+        }
+    }
+    
+    public class ForbiddenException : Exception
+    {
+        public ForbiddenException(string message) : base(message)
+        {
+
         }
     }
 }

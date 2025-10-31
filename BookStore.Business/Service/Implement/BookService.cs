@@ -62,6 +62,8 @@ namespace BookStore.Business.Service.Implement
             var existedBook = await _bookRepository.GetByIdAsync(id, includeProperties: x => x.Include(x => x.OrderDetails));
             if (existedBook == null)
                 throw new NotFoundException("Book not found");
+            if (existedBook.SellerId != thisUserObj.userId)
+                throw new ForbiddenException("Fobidden");
 
             if (existedBook.OrderDetails.Count > 0)
             {
@@ -102,7 +104,7 @@ namespace BookStore.Business.Service.Implement
                 .Where(b => string.IsNullOrEmpty(filter.name) || b.name.Contains(filter.name))
                 .Where(b => !filter.categoryId.HasValue || b.categoryId == filter.categoryId.Value);
 
-            if (user.role == 1) // SELLER
+            if (user != null && user.role == 1) // SELLER
                 query = query.Where(b => b.sellerId == user.userId);
 
             var (total, data) = query.PagingIQueryable(
@@ -125,6 +127,8 @@ namespace BookStore.Business.Service.Implement
             var existedBook = await _bookRepository.GetByIdAsync(id, isTracking: true);
             if (existedBook == null)
                 throw new NotFoundException("Not found this book");
+            if (thisUserObj.userId != existedBook.SellerId)
+                throw new ForbiddenException("Forbidden");
 
             _mapper.Map(updateBookDTO, existedBook);
 

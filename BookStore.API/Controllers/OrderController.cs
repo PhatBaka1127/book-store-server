@@ -35,9 +35,12 @@ namespace BookStore.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetOrderById(int id)
         {
-            var result = await _orderService.GetOrderById(id);
+            ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _orderService.GetOrderById(id, currentUser);
             return Ok(result);
         }
 

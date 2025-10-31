@@ -23,7 +23,9 @@ namespace BookStore.API.Extension
             CreateMap<OrderDetail, OrderDetailResponse>().ReverseMap();
 
             // ORDER
-            CreateMap<Order, OrderResponse>().ReverseMap();
+            CreateMap<Order, OrderResponse>()
+                .ForMember(dest => dest.buyerEmail, opt => opt.MapFrom(src => src.Buyer.Email))
+                .ReverseMap();
             CreateMap<Order, DetailOrderResponse>().ReverseMap();
             CreateMap<Order, CreateOrderRequest>().ReverseMap();
             CreateMap<OrderResponse, OrderFilter>().ReverseMap();
