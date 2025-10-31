@@ -178,9 +178,12 @@ namespace BookStore.Business.Service.Implement
             if (existedOrder == null)
                 throw new NotFoundException("Order not found");
 
-            foreach (var orderDetail in orderDetailRequests)
+            foreach (var orderDetailRequest in orderDetailRequests)
             {
-                existedOrder.OrderDetails.FirstOrDefault(x => x.BookId == orderDetail.bookId).Status = (int)orderDetail.status;
+                var orderDetail = existedOrder.OrderDetails.FirstOrDefault(x => x.BookId == orderDetailRequest.bookId);
+                orderDetail.Status = (int)orderDetailRequest.status;
+                orderDetail.UpdatedDate = DateTime.UtcNow;
+
                 _orderRepository.Update(existedOrder);
             }
 
