@@ -103,4 +103,10 @@ namespace BookStore.Business.Dto
         MONTH = 1,
         YEAR = 2
     }
+
+    public class UpdateOrderDetailRequest
+    {
+        public int bookId { get; set; }
+        public OrderStatus status { get; set; }
+    }
 }

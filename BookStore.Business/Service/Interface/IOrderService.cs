@@ -17,5 +17,8 @@ namespace BookStore.Business.Service.Interface
         public Task<ResponseMessage<DetailOrderResponse>> GetOrderById(int id, ThisUserObj thisUserObj);
         public Task<DynamicResponseModel<OrderResponse>> GetOrders(ThisUserObj thisUserObj, PagingRequest pagingRequest, OrderFilter orderFilter);
         public Task<List<DailySummaryResponse>> GetOrderReport(ThisUserObj thisUserObj, ReportFilter reportFilter);
+
+        // UPDATE
+        public Task<ResponseMessage<bool>> UpdateOrderDetailAsync(ThisUserObj userObj, int orderId, UpdateOrderDetailRequest[] bookId);
     }
 }

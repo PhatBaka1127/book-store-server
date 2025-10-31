@@ -171,5 +171,27 @@ namespace BookStore.Business.Service.Implement
                 results = await data.ToListAsync()
             };
         }
+
+        public async Task<ResponseMessage<bool>> UpdateOrderDetailAsync(ThisUserObj userObj, int orderId, UpdateOrderDetailRequest[] orderDetailRequests)
+        {
+            var existedOrder = await _orderRepository.GetByIdAsync(orderId, includeProperties: x => x.Include(x => x.OrderDetails), isTracking: true);
+            if (existedOrder == null)
+                throw new NotFoundException("Order not found");
+
+            foreach (var orderDetail in orderDetailRequests)
+            {
+                existedOrder.OrderDetails.FirstOrDefault(x => x.BookId == orderDetail.bookId).Status = (int)orderDetail.status;
+                _orderRepository.Update(existedOrder);
+            }
+
+            await _orderRepository.SaveChangesAsync();
+
+            return new ResponseMessage<bool>()
+            {
+                message = "Update order detail successfully",
+                result = true,
+                value = true
+            };
+        }
     }
 }

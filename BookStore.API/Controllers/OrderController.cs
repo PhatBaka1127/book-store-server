@@ -63,5 +63,15 @@ namespace BookStore.API.Controllers
             var result = await _orderService.GetOrderReport(currentUser, reportFilter);
             return Ok(result);
         }
+
+        [HttpPut("{orderId}/order-detail")]
+        [Authorize]
+        public async Task<IActionResult> UpdateOrderDetail(int orderId, [FromBody] UpdateOrderDetailRequest[] updateOrderDetailRequest)
+        {
+            ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
+
+            var result = await _orderService.UpdateOrderDetailAsync(currentUser, orderId, updateOrderDetailRequest);
+            return Ok(result);
+        }
     }
 }
