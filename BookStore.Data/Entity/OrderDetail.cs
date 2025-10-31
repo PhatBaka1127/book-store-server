@@ -16,13 +16,15 @@ namespace BookStore.Data.Entity
         [ForeignKey(nameof(OrderId))]
         [InverseProperty(nameof(Order.OrderDetails))]
         public virtual Order? Order { get; set; }
-
         [Key]
         public int? BookId { get; set; }
         [ForeignKey(nameof(BookId))]
         [InverseProperty(nameof(Book.OrderDetails))]
         public virtual Book? Book { get; set; }
 
+        public int Status { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? UpdatedDate { get; set; }
         public decimal UnitPrice { get; set; }
         public int Quantity { get; set; }
         public decimal TotalPrice => UnitPrice * Quantity;

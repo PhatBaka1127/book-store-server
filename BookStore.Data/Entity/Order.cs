@@ -9,28 +9,22 @@ using System.Threading.Tasks;
 namespace BookStore.Data.Entity
 {
     [Table(nameof(Order))]
-    public partial class Order
+    public partial class Order : EntityBase
     {
         public Order()
         {
             OrderDetails = [];
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
-        public DateTime CreatedDate { get; set; }
+        public int Quantity { get; set; }
+        public decimal TotalPrice { get; set; }
+        public required string Address { get; set; }
+        public required string Phone { get; set; }
 
         public int BuyerId { get; set; }
         [ForeignKey(nameof(BuyerId))]
         [InverseProperty(nameof(User.Orders))]
-        public virtual User Buyer { get; set; }
-
-        public int Quantity { get; set; }
-        public decimal TotalPrice { get; set; }
-        public string Address { get; set; }
-        public string Phone { get; set; }
-        public int Status { get; set; }
+        public virtual required User Buyer { get; set; }
 
         [InverseProperty(nameof(OrderDetail.Order))]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

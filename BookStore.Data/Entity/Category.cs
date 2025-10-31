@@ -9,20 +9,14 @@ using System.Threading.Tasks;
 namespace BookStore.Data.Entity
 {
     [Table(nameof(Category))]
-    public partial class Category
+    public partial class Category : EntityBase
     {
         public Category()
         {
             Books = [];
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
-
         public required string Name { get; set; }
-        public int Status { get; set; } = 1;
-        public string? Image { get; set; }
 
         [InverseProperty(nameof(Book.Category))]
         public virtual ICollection<Book> Books { get; set; }
