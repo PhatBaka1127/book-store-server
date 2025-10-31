@@ -18,6 +18,9 @@ namespace BookStore.Business.Dto
         public decimal? totalPrice { get; set; }
         public string? bookName { get; set; }
         public string? bookImage { get; set; }
+        public DateTime? createdDate { get; set; }
+        public DateTime? updatedDate { get; set; }
+        public OrderStatus? status { get; set; }
     }
 
     public class CreateOrderDetailRequest
