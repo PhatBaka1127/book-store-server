@@ -2,6 +2,7 @@ using BookStore.Business.Helper;
 using BookStore.Business.Service.Interface;
 using BookStore.Data.Helper;
 using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -26,7 +27,7 @@ namespace BookStore.Business.Service.Implement
         {
 
             await using var stream = file.OpenReadStream();
-            var uploadParams = new CloudinaryDotNet.Actions.ImageUploadParams
+            var uploadParams = new ImageUploadParams
             {
                 File = new FileDescription(file.FileName, stream),
                 Folder = "BookStore",
