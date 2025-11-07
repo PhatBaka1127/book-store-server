@@ -5,11 +5,10 @@ namespace BookStore.Data.Entity
 {
     public class EntityBase
     {
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
         public int Status { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
         public DateTime? UpdatedDate { get; set; }
+        public int UpdatedBy { get; set; }
     }
 } 

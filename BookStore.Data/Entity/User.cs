@@ -9,12 +9,13 @@ using System.Threading.Tasks;
 namespace BookStore.Data.Entity
 {
     [Table(nameof(User))]
-    public class User : EntityBase
+    public class User : IdentityEntity
     {
         public User()
         {
             Books = [];
             Orders = [];
+            Shops = [];
         }
 
         public required string Email { get; set; }
@@ -28,8 +29,10 @@ namespace BookStore.Data.Entity
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
         [InverseProperty(nameof(Order.Buyer))]
-        public virtual ICollection<Order> Orders { get; set; }
+        public ICollection<Order> Orders { get; set; }
         [InverseProperty(nameof(Book.Seller))]
-        public virtual ICollection<Book> Books { get; set; }
+        public ICollection<Book> Books { get; set; }
+        [InverseProperty(nameof(Shop.Users))]
+        public ICollection<Shop> Shops { get; set; }
     }
 }

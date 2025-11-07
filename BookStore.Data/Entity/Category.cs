@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace BookStore.Data.Entity
 {
     [Table(nameof(Category))]
-    public partial class Category : EntityBase
+    public partial class Category : IdentityEntity
     {
         public Category()
         {

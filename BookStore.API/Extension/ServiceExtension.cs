@@ -17,7 +17,6 @@ namespace BookStore.API.Extension
         {
             ThisUserObj currentUser = new();
 
-            var checkUser = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber);
             currentUser.userId = int.Parse(httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.SerialNumber).Value);
             currentUser.email = httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
             currentUser.role = int.Parse(httpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value);
@@ -25,7 +24,7 @@ namespace BookStore.API.Extension
             var existedUser = await _userService.GetUserByEmailAsync(currentUser.email);
             if (existedUser == null)
             {
-                throw new NotFoundException("Không tìm thấy user này");
+                throw new NotFoundException("User not found");
             }
 
             return currentUser;
@@ -47,7 +46,7 @@ namespace BookStore.API.Extension
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Vouchee.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookStore.API", Version = "v1" });
                 c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {

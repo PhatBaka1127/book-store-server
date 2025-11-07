@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 namespace BookStore.Data.Entity
 {
     [Table(nameof(Book))]
-    public partial class Book : EntityBase
+    public partial class Book : IdentityEntity
     {
         public Book()
         {
             OrderDetails = [];
+            Ratings = [];
         }
 
         public required string Name { get; set; }
@@ -25,13 +26,15 @@ namespace BookStore.Data.Entity
         public int SellerId { get; set; }
         [ForeignKey(nameof(SellerId))]
         [InverseProperty(nameof(User.Books))]
-        public required virtual User Seller { get; set; }
+        public required User Seller { get; set; }
         public int CategoryId { get; set; }
         [ForeignKey(nameof(CategoryId))]
         [InverseProperty(nameof(Category.Books))]
-        public required virtual Category Category { get; set; }
+        public required Category Category { get; set; }
 
         [InverseProperty(nameof(OrderDetail.Book))]
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        [InverseProperty(nameof(Rating.Book))]
+        public ICollection<Rating> Ratings { get; set; }
     }
 }

@@ -41,6 +41,13 @@ namespace BookStore.Data.Helper
             modelBuilder.Entity<User>().Property(x => x.Id);
             modelBuilder.Entity<Order>().Property(x => x.Id);
             modelBuilder.Entity<OrderDetail>().HasKey(od => new { od.OrderId, od.BookId });
+            modelBuilder.Entity<Rating>().HasKey(r => new { r.BookId, r.OrderId });
+
+            modelBuilder.Entity<OrderDetail>()
+                            .HasOne(od => od.Book)
+                            .WithMany(b => b.OrderDetails)
+                            .HasForeignKey(od => od.BookId)
+                            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<OrderDetail>()
                             .HasOne(od => od.Book)
