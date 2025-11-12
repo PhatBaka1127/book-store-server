@@ -4,6 +4,6 @@ namespace BookStore.Business.Service.Interface
 {
     public interface ICloudinaryService
     {
-        Task<string> UploadImageAsync(IFormFile file);
+        public Task<string> UploadImageAsync(IFormFile file);
     }
 }

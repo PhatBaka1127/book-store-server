@@ -67,6 +67,8 @@ namespace BookStore.Business.Dto
     public enum RoleEnum
     {
         BUYER = 0,
-        SELLER = 1
+        SELLER = 1,
+        SHIPPER = 2,
+        ADMIN = 3
     }
 }

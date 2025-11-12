@@ -40,6 +40,7 @@ namespace BookStore.API.Extension
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IShopService, ShopService>();
         }
 
         public static void AddSwaggerServices(this IServiceCollection services, IConfiguration configuration)

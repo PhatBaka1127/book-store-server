@@ -28,15 +28,10 @@ namespace BookStore.Business.Service.Implement
         public async Task<UserResponse> GetUserByEmailAsync(string email)
         {
             var user = await _userRepository.GetFirstOrDefaultAsync(x => x.Email.ToLower().Equals(email.ToLower()));
-            if (user != null)
-            {
-                UserResponse userDTO = _mapper.Map<UserResponse>(user);
-                return userDTO;
-            }
-            else
-            {
-                throw new NotFoundException($"Không tìm thấy user với email {email}");
-            }
+            if (user == null)
+                 throw new NotFoundException($"User not found");
+            UserResponse userDTO = _mapper.Map<UserResponse>(user);
+            return userDTO;
         }
     }
 }

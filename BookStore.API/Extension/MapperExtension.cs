@@ -32,6 +32,12 @@ namespace BookStore.API.Extension
 
             // CATEGORY
             CreateMap<Category, GetCategoryDTO>().ReverseMap();
+
+            // SHOP
+            CreateMap<Shop, CreateShopRequest>().ReverseMap();
+            CreateMap<Shop, UpdateShopRequest>().ReverseMap();
+            CreateMap<Shop, ShopResponse>().ReverseMap();
+            CreateMap<ShopResponse, ShopFilter>().ReverseMap();
         }
     }
 }
