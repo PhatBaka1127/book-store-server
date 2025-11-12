@@ -23,7 +23,8 @@ namespace BookStore.Data.Entity
         public string? Image { get; set; }
         // 0: Buyer
         // 1: Seller
-        // 2: Admin
+        // 2: Shipper
+        // 3: Admin
         public int Role { get; set; } = 0;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
@@ -34,5 +35,7 @@ namespace BookStore.Data.Entity
         public ICollection<Book> Books { get; set; }
         [InverseProperty(nameof(Shop.Users))]
         public ICollection<Shop> Shops { get; set; }
+        [InverseProperty(nameof(Cart.User))]
+        public ICollection<Cart> Carts { get; set; }
     }
 }

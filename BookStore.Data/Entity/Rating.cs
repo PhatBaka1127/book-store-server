@@ -24,9 +24,5 @@ namespace BookStore.Data.Entity
 
         public int Star { get; set; }
         public string? Comment { get; set; }
-
-        public int Status { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
     }
 }

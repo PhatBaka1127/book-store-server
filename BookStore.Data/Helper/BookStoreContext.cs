@@ -1,5 +1,6 @@
 ﻿using BookStore.Data.Entity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace BookStore.Data.Helper
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Cart> Carts { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -42,6 +44,7 @@ namespace BookStore.Data.Helper
             modelBuilder.Entity<Order>().Property(x => x.Id);
             modelBuilder.Entity<OrderDetail>().HasKey(od => new { od.OrderId, od.BookId });
             modelBuilder.Entity<Rating>().HasKey(r => new { r.BookId, r.OrderId });
+            modelBuilder.Entity<Cart>().HasKey(c => new { c.BookId, c.UserId });
 
             modelBuilder.Entity<OrderDetail>()
                             .HasOne(od => od.Book)
@@ -49,10 +52,10 @@ namespace BookStore.Data.Helper
                             .HasForeignKey(od => od.BookId)
                             .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<OrderDetail>()
-                            .HasOne(od => od.Book)
-                            .WithMany(b => b.OrderDetails)
-                            .HasForeignKey(od => od.BookId)
+            modelBuilder.Entity<Cart>()
+                            .HasOne(c => c.Book)
+                            .WithMany(b => b.Carts)
+                            .HasForeignKey(c => c.BookId)
                             .OnDelete(DeleteBehavior.NoAction);
 
             base.OnModelCreating(modelBuilder);
