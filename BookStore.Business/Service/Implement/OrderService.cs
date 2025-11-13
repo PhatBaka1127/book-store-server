@@ -18,14 +18,17 @@ namespace BookStore.Business.Service.Implement
 {
     public class OrderService : IOrderService
     {
+        private readonly IRepository<User> _userRepository;
         private readonly IRepository<Book> _bookRepository;
         private readonly IRepository<Order> _orderRepository;
         private readonly IMapper _mapper;
 
         public OrderService(IRepository<Order> orderRepository,
             IRepository<Book> bookRepository,
+            IRepository<User> userRepository,
             IMapper mapper)
         {
+            _userRepository = userRepository;
             _bookRepository = bookRepository;
             _orderRepository = orderRepository;
             _mapper = mapper;
@@ -33,6 +36,7 @@ namespace BookStore.Business.Service.Implement
 
         public async Task<ResponseMessage<int>> CreateOrderAsync(CreateOrderRequest createOrderDTO, ThisUserObj thisUserObj)
         {
+            var exisedSeller = await _userRepository.FindAsync(thisUserObj.userId);
             int orderId = 0;
 
             await _bookRepository.ExecuteInTransactionAsync(async () =>
@@ -47,10 +51,10 @@ namespace BookStore.Business.Service.Implement
                     if (book == null)
                         throw new NotFoundException($"Book {item.bookId} not found");
 
-                    if (book.Stock < item.quantity)
-                        throw new ConflictException($"Book {book.Name} is out of stock");
+                    // 1. Shop seller order
+                    
 
-                    book.Stock -= (int)item.quantity;
+                    // 2. Online customer order
                     _bookRepository.Update(book);
 
                     newOrder.OrderDetails.Add(new OrderDetail

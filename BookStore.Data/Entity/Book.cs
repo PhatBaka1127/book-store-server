@@ -16,14 +16,16 @@ namespace BookStore.Data.Entity
             OrderDetails = [];
             Ratings = [];
             Carts = [];
+            BookShops = [];
         }
 
         public required string Name { get; set; }
         public string? Description { get; set; }
         public decimal UnitPrice { get; set; } = 0;
-        public int Stock { get; set; } = 0;
+        public int OnlineStock { get; set; } = 0;
+        public int OfflineStock { get; set; } = 0;
         public string? Image { get; set; }
-        public double AvageStar => Ratings.Average(x => x.Star);
+        public double AvageStar { get; set; } = 0;
 
         public int SellerId { get; set; }
         [ForeignKey(nameof(SellerId))]
@@ -40,5 +42,7 @@ namespace BookStore.Data.Entity
         public ICollection<Rating> Ratings { get; set; }
         [InverseProperty(nameof(Cart.Book))]
         public ICollection<Cart> Carts { get; set; }
+        [InverseProperty(nameof(BookShop.Book))]
+        public ICollection<BookShop> BookShops { get; set; }
     }
 }

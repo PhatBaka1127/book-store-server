@@ -13,6 +13,7 @@ namespace BookStore.Data.Entity
         public Shop()
         {
             Users = [];
+            BookShops = [];
         }
         public string? Image { get; set; }
         public string? Address { get; set; }
@@ -21,5 +22,7 @@ namespace BookStore.Data.Entity
 
         [InverseProperty(nameof(User.Shops))]
         public ICollection<User> Users { get; set; }
+        [InverseProperty(nameof(BookShop.Shop))]
+        public ICollection<BookShop> BookShops { get; set; }
     }
 }

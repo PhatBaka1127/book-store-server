@@ -22,6 +22,7 @@ namespace BookStore.Data.Helper
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Cart> Carts { get; set; }
+        public virtual DbSet<BookShop> BookShops { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -45,6 +46,7 @@ namespace BookStore.Data.Helper
             modelBuilder.Entity<OrderDetail>().HasKey(od => new { od.OrderId, od.BookId });
             modelBuilder.Entity<Rating>().HasKey(r => new { r.BookId, r.OrderId });
             modelBuilder.Entity<Cart>().HasKey(c => new { c.BookId, c.UserId });
+            modelBuilder.Entity<BookShop>().HasKey(bs => new { bs.BookId, bs.ShopId });
 
             modelBuilder.Entity<OrderDetail>()
                             .HasOne(od => od.Book)

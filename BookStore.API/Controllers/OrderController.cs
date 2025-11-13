@@ -64,7 +64,7 @@ namespace BookStore.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{orderId}/order-detail")]
+        [HttpPatch("{orderId}/order-detail")]
         [Authorize]
         public async Task<IActionResult> UpdateOrderDetail(int orderId, [FromBody] UpdateOrderDetailRequest[] updateOrderDetailRequest)
         {
