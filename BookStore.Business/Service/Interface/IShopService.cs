@@ -10,7 +10,7 @@ namespace BookStore.Business.Service.Interface
 
         // READ
         public Task<ResponseMessage<ShopResponse>> GetShopByIdAsync(int id);
-        public Task<DynamicResponseModel<ShopResponse>> GetShopAsync(ShopResponse shopResponse, ThisUserObj userObj, PagingRequest pagingRequest);
+        public Task<DynamicResponseModel<ShopResponse>> GetShopAsync(ShopFilter shopFilter, ThisUserObj userObj, PagingRequest pagingRequest);
 
         // UPDATE
         public Task<ResponseMessage<bool>> UpdateShopByIdAsync(int id, ThisUserObj thisUserObj, UpdateShopRequest updateShopRequest);

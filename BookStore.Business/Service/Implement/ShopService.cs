@@ -14,11 +14,14 @@ namespace BookStore.Business.Service.Implement
     public class ShopService : IShopService
     {
         private readonly IRepository<Shop> _shopRepository;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
 
         public ShopService(IRepository<Shop> shopRepository,
+                            ICloudinaryService cloudinaryService,
                             IMapper mapper)
         {
+            _cloudinaryService = cloudinaryService;
             _shopRepository = shopRepository;
             _mapper = mapper;
         }
@@ -28,8 +31,13 @@ namespace BookStore.Business.Service.Implement
             if (userObj.role != (int)RoleEnum.SELLER)
                 throw new ForbiddenException("Forbidden");
 
+            string image = null;
+            if (createShopRequest.image != null)
+                image = await _cloudinaryService.UploadImageAsync(createShopRequest.image);
+
             var entity = _mapper.Map<Shop>(createShopRequest);
             entity.CreatedBy = userObj.userId;
+            entity.Image = image;
 
             _shopRepository.Add(entity);
             await _shopRepository.SaveChangesAsync();
@@ -63,13 +71,13 @@ namespace BookStore.Business.Service.Implement
             };
         }
 
-        public async Task<DynamicResponseModel<ShopResponse>> GetShopAsync(ShopResponse shopFilter, ThisUserObj userObj, PagingRequest pagingRequest)
+        public async Task<DynamicResponseModel<ShopResponse>> GetShopAsync(ShopFilter shopFilter, ThisUserObj userObj, PagingRequest pagingRequest)
         {
-             var (total, data) = _shopRepository.GetTable()
-                .DynamicFilter(shopFilter)
-                .ProjectTo<ShopResponse>(_mapper.ConfigurationProvider)
-                .PagingIQueryable(pagingRequest.page, pagingRequest.pageSize,
-                                  PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
+            var (total, data) = _shopRepository.GetTable()
+               .DynamicFilter(shopFilter)
+               .ProjectTo<ShopResponse>(_mapper.ConfigurationProvider)
+               .PagingIQueryable(pagingRequest.page, pagingRequest.pageSize,
+                                 PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
 
             return new DynamicResponseModel<ShopResponse>
             {
@@ -104,7 +112,21 @@ namespace BookStore.Business.Service.Implement
             if (existedShop.Users.Any(x => x.Id == thisUserObj.userId))
                 throw new ForbiddenException("Forbidden");
 
+            var oldImage = existedShop.Image;
             _mapper.Map(updateShopRequest, existedShop);
+            if (updateShopRequest.image != null)
+            {
+                if (!string.IsNullOrEmpty(oldImage))
+                {
+                    await _cloudinaryService.DeleteImageAsync(oldImage);
+                }
+                var newImageUrl = await _cloudinaryService.UploadImageAsync(updateShopRequest.image);
+                existedShop.Image = newImageUrl;
+            }
+            else
+            {
+                existedShop.Image = oldImage;
+            }
             existedShop.UpdatedBy = thisUserObj.userId;
 
             _shopRepository.Update(existedShop);

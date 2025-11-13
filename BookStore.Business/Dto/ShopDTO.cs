@@ -9,24 +9,28 @@ namespace BookStore.Business.Dto
         public decimal? lat { get; set; }
     }
 
-    public class CreateShopRequest
+    public class CreateShopRequest : ShopDTO
     {
         public IFormFile? image { get; set; }
         public DateTime createdDate = DateTime.UtcNow;
     }
 
-    public class UpdateShopRequest
+    public class UpdateShopRequest : ShopDTO
     {
         public IFormFile? image { get; set; }
+        public DateTime updatedDate = DateTime.UtcNow;
     }
 
-    public class ShopResponse
+    public class ShopResponse : ShopDTO
     {
-
+        public int? id { get; set; }
+        public string? image { get; set; }
+        public DateTime? createdDate { get; set; }
     }
     
     public class ShopFilter
     {
-        
+        public DateTime? startDate { get; set; }
+        public DateTime? enddate { get; set; }
     }
 }
