@@ -28,5 +28,14 @@ namespace BookStore.Data.Entity
         public string? Image { get; set; }
         public int Reason { get; set; }
         public string? Detail { get; set; }
+        public new OrderDetailStatusEnum Status { get; set; }
+    }
+
+    public enum OrderDetailStatusEnum
+    {
+        PENDING,
+        PROCESSING,
+        DELIVERING,
+        DELIVERED
     }
 }

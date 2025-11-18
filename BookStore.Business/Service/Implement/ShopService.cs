@@ -56,7 +56,6 @@ namespace BookStore.Business.Service.Implement
             if (exitedShop == null)
                 throw new NotFoundException("Shop not found");
 
-            exitedShop.Status = 0;
             exitedShop.UpdatedDate = DateTime.UtcNow;
             exitedShop.UpdatedBy = thisUserObj.userId;
 

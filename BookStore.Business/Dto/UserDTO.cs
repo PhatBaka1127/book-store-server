@@ -39,7 +39,7 @@ namespace BookStore.Business.Dto
         public int id { get; set; }
         public string? email { get; set; }
         public int role { get; set; }
-        public int status { get; set; }
+        public string? status { get; set; }
         public string? accessToken { get; set; }
         public DateTime? expireAt { get; set; }
         public string? refreshToken { get; set; }
@@ -61,7 +61,7 @@ namespace BookStore.Business.Dto
         public int? status { get; set; }
         public string? image { get; set; }
         public ICollection<OrderResponse>? orders { get; set; }
-        public ICollection<GetBookDTO>? books { get; set; }
+        public ICollection<GetBookResponse>? books { get; set; }
     }
 
     public enum RoleEnum

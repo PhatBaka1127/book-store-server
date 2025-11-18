@@ -64,7 +64,6 @@ namespace BookStore.Business.Service.Implement
                     id = user.Id,
                     email = user.Email,
                     role = user.Role,
-                    status = user.Status,
                     accessToken = accessToken,
                     refreshToken = refreshToken,
                     expireAt = expireAt
@@ -140,7 +139,6 @@ namespace BookStore.Business.Service.Implement
                     id = newUser.Id,
                     email = requestAuthDTO.email,
                     role = newUser.Role,
-                    status = newUser.Status,
                     accessToken = token,
                     expireAt = expireAt
                 }
@@ -171,7 +169,6 @@ namespace BookStore.Business.Service.Implement
                     id = user.Id,
                     email = user.Email,
                     role = user.Role,
-                    status = user.Status,
                     accessToken = newAccessToken,
                     refreshToken = newRefreshToken,
                     expireAt = expireAt

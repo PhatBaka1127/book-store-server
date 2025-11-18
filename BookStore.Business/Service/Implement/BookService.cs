@@ -34,7 +34,7 @@ namespace BookStore.Business.Service.Implement
             _mapper = mapper;
         }
 
-        public async Task<ResponseMessage<int>> CreateBookAsync(CreateBookDTO createBookDTO, ThisUserObj thisUserObj)
+        public async Task<ResponseMessage<int>> CreateBookAsync(CreateBookRequest createBookDTO, ThisUserObj thisUserObj)
         {
             var existedCategory = await _categoryRepository.FindAsync(createBookDTO.categoryId);
             if (existedCategory == null)
@@ -67,7 +67,6 @@ namespace BookStore.Business.Service.Implement
 
             if (existedBook.OrderDetails.Count > 0)
             {
-                existedBook.Status = 0;
                 _bookRepository.Update(existedBook);
             }
             else
@@ -82,25 +81,25 @@ namespace BookStore.Business.Service.Implement
             };
         }
 
-        public async Task<ResponseMessage<GetBookDTO>> GetBookByIdAsync(int id)
+        public async Task<ResponseMessage<GetBookResponse>> GetBookByIdAsync(int id)
         {
             var existedBook = await _bookRepository.GetByIdAsync(id, includeProperties: x => x.Include(x => x.Category)
                                                                                                 .Include(x => x.Seller));
             if (existedBook == null)
                 throw new NotFoundException("Book not found");
-            return new ResponseMessage<GetBookDTO>()
+            return new ResponseMessage<GetBookResponse>()
             {
                 message = "Book found",
                 result = true,
-                value = _mapper.Map<GetBookDTO>(existedBook)
+                value = _mapper.Map<GetBookResponse>(existedBook)
             };
         }
 
-        public async Task<DynamicResponseModel<GetBookDTO>> GetBooksAsync(
+        public async Task<DynamicResponseModel<GetBookResponse>> GetBooksAsync(
             PagingRequest paging, BookFilter filter, ThisUserObj user)
         {
             var query = _bookRepository.GetTable()
-                .ProjectTo<GetBookDTO>(_mapper.ConfigurationProvider)
+                .ProjectTo<GetBookResponse>(_mapper.ConfigurationProvider)
                 .Where(b => string.IsNullOrEmpty(filter.name) || b.name.Contains(filter.name))
                 .Where(b => !filter.categoryId.HasValue || b.categoryId == filter.categoryId.Value);
 
@@ -110,7 +109,7 @@ namespace BookStore.Business.Service.Implement
             var (total, data) = query.PagingIQueryable(
                 paging.page, paging.pageSize, PageConstant.LIMIT_PAGING, PageConstant.DEFAULT_PAPING);
 
-            return new DynamicResponseModel<GetBookDTO>
+            return new DynamicResponseModel<GetBookResponse>
             {
                 metaData = new MetaData
                 {
@@ -122,7 +121,7 @@ namespace BookStore.Business.Service.Implement
             };
         }
 
-        public async Task<ResponseMessage<bool>> UpdateBookAsync(int id, UpdateBookDTO updateBookDTO, ThisUserObj thisUserObj)
+        public async Task<ResponseMessage<bool>> UpdateBookAsync(int id, UpdateBookRequest updateBookDTO, ThisUserObj thisUserObj)
         {
             var existedBook = await _bookRepository.GetByIdAsync(id, isTracking: true);
             if (existedBook == null)

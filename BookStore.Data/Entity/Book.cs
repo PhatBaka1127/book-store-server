@@ -25,7 +25,7 @@ namespace BookStore.Data.Entity
         public int OnlineStock { get; set; } = 0;
         public int OfflineStock { get; set; } = 0;
         public string? Image { get; set; }
-        public double AvageStar { get; set; } = 0;
+        public double AverageStar { get; set; } = 0;
 
         public int SellerId { get; set; }
         [ForeignKey(nameof(SellerId))]

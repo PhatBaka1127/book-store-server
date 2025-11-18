@@ -26,7 +26,7 @@ namespace BookStore.API.Controllers
 
         [HttpPost()]
         [Authorize]
-        public async Task<IActionResult> CreateBook([FromForm] CreateBookDTO voucherDTO)
+        public async Task<IActionResult> CreateBook([FromForm] CreateBookRequest voucherDTO)
         {
             ThisUserObj currentUser = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 
@@ -56,7 +56,7 @@ namespace BookStore.API.Controllers
 
         [HttpPatch("{id}")]
         [Authorize]
-        public async Task<IActionResult> UpdateBook(int id, [FromForm] UpdateBookDTO updateBookDTO)
+        public async Task<IActionResult> UpdateBook(int id, [FromForm] UpdateBookRequest updateBookDTO)
         {
             ThisUserObj thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 
@@ -66,7 +66,7 @@ namespace BookStore.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteBook(int id, [FromForm] UpdateBookDTO updateBookDTO)
+        public async Task<IActionResult> DeleteBook(int id, [FromForm] UpdateBookRequest updateBookDTO)
         {
             ThisUserObj thisUserObj = await ServiceExtension.GetThisUserInfo(HttpContext, _userService);
 

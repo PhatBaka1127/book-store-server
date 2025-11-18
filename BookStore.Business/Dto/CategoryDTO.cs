@@ -13,6 +13,6 @@ namespace BookStore.Business.Dto
         public int? id { get; set; }
         public string? name { get; set; }
         public int? status { get; set; }
-        public ICollection<GetBookDTO>? books { get; set; }
+        public ICollection<GetBookResponse>? books { get; set; }
     }
 }

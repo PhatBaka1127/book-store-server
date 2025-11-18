@@ -16,6 +16,7 @@ namespace BookStore.Data.Entity
             Books = [];
             Orders = [];
             Shops = [];
+            Carts = [];
         }
 
         public required string Email { get; set; }

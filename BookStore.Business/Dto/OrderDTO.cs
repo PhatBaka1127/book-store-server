@@ -107,6 +107,6 @@ namespace BookStore.Business.Dto
     public class UpdateOrderDetailRequest
     {
         public int bookId { get; set; }
-        public OrderStatus status { get; set; }
+        public OrderDetailStatusEnum status { get; set; }
     }
 }

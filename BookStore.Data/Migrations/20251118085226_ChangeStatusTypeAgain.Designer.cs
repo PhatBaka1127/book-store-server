@@ -3,6 +3,7 @@ using System;
 using BookStore.Data.Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BookStore.Data.Migrations
 {
     [DbContext(typeof(BookStoreContext))]
-    partial class BookStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20251118085226_ChangeStatusTypeAgain")]
+    partial class ChangeStatusTypeAgain
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,7 +33,7 @@ namespace BookStore.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<double>("AverageStar")
+                    b.Property<double>("AvarageStar")
                         .HasColumnType("double precision");
 
                     b.Property<int>("CategoryId")
@@ -59,9 +62,6 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<int>("SellerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("UnitPrice")
@@ -136,9 +136,6 @@ namespace BookStore.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("integer");
 
@@ -176,9 +173,6 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("TotalPrice")
@@ -223,9 +217,6 @@ namespace BookStore.Data.Migrations
                     b.Property<int>("Reason")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("numeric");
 
@@ -260,9 +251,6 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Star")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<int>("UpdatedBy")
@@ -303,9 +291,6 @@ namespace BookStore.Data.Migrations
 
                     b.Property<decimal>("Lon")
                         .HasColumnType("numeric");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
 
                     b.Property<int>("UpdatedBy")
                         .HasColumnType("integer");
@@ -349,9 +334,6 @@ namespace BookStore.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.Property<int>("UpdatedBy")

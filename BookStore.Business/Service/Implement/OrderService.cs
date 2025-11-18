@@ -185,7 +185,6 @@ namespace BookStore.Business.Service.Implement
             foreach (var orderDetailRequest in orderDetailRequests)
             {
                 var orderDetail = existedOrder.OrderDetails.FirstOrDefault(x => x.BookId == orderDetailRequest.bookId);
-                orderDetail.Status = (int)orderDetailRequest.status;
                 orderDetail.UpdatedDate = DateTime.UtcNow;
 
                 _orderRepository.Update(existedOrder);
