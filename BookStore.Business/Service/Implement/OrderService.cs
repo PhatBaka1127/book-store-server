@@ -42,10 +42,7 @@ namespace BookStore.Business.Service.Implement
             await _bookRepository.ExecuteInTransactionAsync(async () =>
             {
                 Order newOrder = _mapper.Map<Order>(createOrderDTO);
-                newOrder.BuyerId = thisUserObj.userId;
-                newOrder.CreatedDate = DateTime.UtcNow;
-
-                foreach (var item in createOrderDTO.createOrderDetailDTOs)
+                foreach (var item in createOrderDTO.createOrderDetailRequests)
                 {
                     var book = await _bookRepository.FindAsync(item.bookId);
                     if (book == null)
@@ -61,11 +58,16 @@ namespace BookStore.Business.Service.Implement
                     {
                         BookId = book.Id,
                         Quantity = (int)item.quantity,
-                        UnitPrice = book.UnitPrice
+                        UnitPrice = book.UnitPrice,
+                        CreatedDate = DateTime.UtcNow,
+                        CreatedBy = thisUserObj.userId,
                     });
                 }
 
                 newOrder.TotalPrice = newOrder.OrderDetails.Sum(x => x.TotalPrice);
+                newOrder.BuyerId = thisUserObj.userId;
+                newOrder.CreatedDate = DateTime.UtcNow;
+                newOrder.CreatedBy = thisUserObj.userId;
 
                 _orderRepository.Add(newOrder);
 
@@ -185,6 +187,7 @@ namespace BookStore.Business.Service.Implement
             foreach (var orderDetailRequest in orderDetailRequests)
             {
                 var orderDetail = existedOrder.OrderDetails.FirstOrDefault(x => x.BookId == orderDetailRequest.bookId);
+
                 orderDetail.UpdatedDate = DateTime.UtcNow;
 
                 _orderRepository.Update(existedOrder);

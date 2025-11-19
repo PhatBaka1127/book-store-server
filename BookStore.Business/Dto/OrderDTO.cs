@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 
@@ -35,8 +36,9 @@ namespace BookStore.Business.Dto
         public string phone { get; set; }
         public string address { get; set; }
         public int status = (int)OrderStatus.ORDERED;
-        public int quantity => (int)createOrderDetailDTOs.Sum(x => x.quantity);
-        public CreateOrderDetailRequest[] createOrderDetailDTOs { get; set; }
+        public int quantity => (int) createOrderDetailRequests.Sum(x => x.quantity);
+        [JsonPropertyName("orderDetails")]
+        public CreateOrderDetailRequest[] createOrderDetailRequests { get; set; }
     }
 
     public class OrderFilter
