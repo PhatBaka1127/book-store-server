@@ -94,8 +94,6 @@ namespace BookStore.Business.Service.Implement
                 throw new NotFoundException("Order not found");
             if (thisUserObj.role == 0 && thisUserObj.userId != existedOrder.BuyerId)
                 throw new ForbiddenException("Forbidden");
-
-            existedOrder.OrderDetails = existedOrder.OrderDetails.Where(x => x.Book.SellerId == thisUserObj.userId).ToList();
             existedOrder.Quantity = existedOrder.OrderDetails.Sum(x => x.Quantity);
             existedOrder.TotalPrice = existedOrder.OrderDetails.Sum(x => x.TotalPrice);
 

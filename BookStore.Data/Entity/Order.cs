@@ -31,5 +31,14 @@ namespace BookStore.Data.Entity
         public ICollection<OrderDetail> OrderDetails { get; set; }
         [InverseProperty(nameof(Rating.Order))]
         public ICollection<Rating> Ratings { get; set; } 
+        public new OrderStatusEnum Status {get; set; } 
+    }
+
+    public enum OrderStatusEnum
+    {
+        PENDING,
+        PROCESSING,
+        DELIVERING,
+        DELIVERED
     }
 }
